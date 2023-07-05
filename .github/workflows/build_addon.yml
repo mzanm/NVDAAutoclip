@@ -1,0 +1,31 @@
+name: build-and-release-addon
+
+on:
+  push:
+    tags: ["*"]
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          pip install scons markdown
+          sudo apt-get update -y
+          sudo apt-get full-upgrade -y
+          sudo apt-get install -y gettext
+      - name: Build add-on
+        run: scons
+      - name: Create release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ./*.nvda-addon
+          prerelease: contains(github.ref, '-pre')
+          fail_on_unmatched_files: true

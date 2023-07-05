@@ -1,0 +1,61 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: NVDAAutoclip\n"
+"POT-Creation-Date: 2023-07-05 15:03+0300\n"
+"PO-Revision-Date: 2023-07-05 15:03+0300\n"
+"Last-Translator: \n"
+"Language-Team: mzanm\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
+"X-Generator: Poedit 3.3.2\n"
+"X-Poedit-Basepath: ../../../..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: addon/globalPlugins/autoclip/__init__.py\n"
+"X-Poedit-SearchPath-1: buildVars.py\n"
+
+#: addon/globalPlugins/autoclip/__init__.py:79
+msgid "&Automatic clipboard reading"
+msgstr "قراءة ال&حافظة تلقائيًا"
+
+#: addon/globalPlugins/autoclip/__init__.py:79
+#: addon/globalPlugins/autoclip/__init__.py:99
+msgid "Toggles Automatic clipboard reading."
+msgstr "يبدل بين تفعيل وتعطيل القراءة التلقائية للحافظة."
+
+#: addon/globalPlugins/autoclip/__init__.py:126
+msgid "Enabled Automatic Clipboard Reading."
+msgstr "تم تفعيل القراءة التلقائية للحافظة."
+
+#: addon/globalPlugins/autoclip/__init__.py:130
+msgid "Disabled Automatic Clipboard Reading."
+msgstr "تم تعطيل القرائة التلقائية للحافظة"
+
+#: addon/globalPlugins/autoclip/__init__.py:152 buildVars.py:23
+msgid "Autoclip"
+msgstr "Autoclip"
+
+#: addon/globalPlugins/autoclip/__init__.py:157
+msgid "Always &Interrupt before speaking the clipboard"
+msgstr "&ايقاف النطق دائمًا قبل قراءة محتوى الحافظة"
+
+#: addon/globalPlugins/autoclip/__init__.py:161
+msgid ""
+"&Remember the state of automatic clipboard reading after  NVDA restart. This "
+"option must be enabled for use in configuration profiles"
+msgstr ""
+"&تذكر حالة القراءة التلقائية للحافظة بعد إعادة تشغيل NVDA. يجب تمكين هذا "
+"الخيار لاستخدام الاضافة في الأوضاع"
+
+#: buildVars.py:26
+msgid ""
+"Automatically read the contents of the clipboard when a change is detected."
+msgstr "يقرأ محتويات الحافظة تلقائيًا عند اكتشاف تغيير."
+
+#, fuzzy
+#~| msgid "Autoclip"
+#~ msgid "autoclip"
+#~ msgstr "Autoclip"
