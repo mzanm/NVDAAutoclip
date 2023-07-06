@@ -1,10 +1,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: NVDAAutoclip\n"
-"POT-Creation-Date: 2023-07-06 06:53+0300\n"
-"PO-Revision-Date: 2023-07-06 06:53+0300\n"
-"Last-Translator: \n"
-"Language-Team: mzanm\n"
+"POT-Creation-Date: 2023-07-06 09:47+0300\n"
+"PO-Revision-Date: 2023-07-06 09:50+0300\n"
+"Last-Translator: Mazen <mzanf4@gmail.com>\n"
+"Language-Team: \n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,23 +43,14 @@ msgid "Always &Interrupt before speaking the clipboard"
 msgstr "&ايقاف النطق دائمًا قبل قراءة محتوى الحافظة"
 
 #: addon/globalPlugins/autoclip/__init__.py:171
-#, fuzzy
-#| msgid ""
-#| "&Remember the state of automatic clipboard reading after  NVDA restart. "
-#| "This option must be enabled for use in configuration profiles"
 msgid ""
 "&Remember automatic clipboard reading after  NVDA restart. Required for use "
 "in configuration profiles"
 msgstr ""
-"&تذكر حالة القراءة التلقائية للحافظة بعد إعادة تشغيل NVDA. يجب تمكين هذا "
+"تذكر &حالة القراءة التلقائية للحافظة بعد إعادة تشغيل NVDA. يجب تمكين هذا "
 "الخيار لاستخدام الاضافة في الأوضاع"
 
 #: buildVars.py:26
 msgid ""
 "Automatically read the contents of the clipboard when a change is detected."
 msgstr "يقرأ محتويات الحافظة تلقائيًا عند اكتشاف تغيير."
-
-#, fuzzy
-#~| msgid "Autoclip"
-#~ msgid "autoclip"
-#~ msgstr "Autoclip"
