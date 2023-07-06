@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: NVDAAutoclip\n"
-"POT-Creation-Date: 2023-07-05 15:03+0300\n"
-"PO-Revision-Date: 2023-07-05 15:03+0300\n"
+"POT-Creation-Date: 2023-07-06 06:53+0300\n"
+"PO-Revision-Date: 2023-07-06 06:53+0300\n"
 "Last-Translator: \n"
 "Language-Team: mzanm\n"
 "Language: ar\n"
@@ -17,35 +17,39 @@ msgstr ""
 "X-Poedit-SearchPath-0: addon/globalPlugins/autoclip/__init__.py\n"
 "X-Poedit-SearchPath-1: buildVars.py\n"
 
-#: addon/globalPlugins/autoclip/__init__.py:79
+#: addon/globalPlugins/autoclip/__init__.py:88
 msgid "&Automatic clipboard reading"
 msgstr "قراءة ال&حافظة تلقائيًا"
 
-#: addon/globalPlugins/autoclip/__init__.py:79
-#: addon/globalPlugins/autoclip/__init__.py:99
+#: addon/globalPlugins/autoclip/__init__.py:88
+#: addon/globalPlugins/autoclip/__init__.py:108
 msgid "Toggles Automatic clipboard reading."
 msgstr "يبدل بين تفعيل وتعطيل القراءة التلقائية للحافظة."
 
-#: addon/globalPlugins/autoclip/__init__.py:126
+#: addon/globalPlugins/autoclip/__init__.py:135
 msgid "Enabled Automatic Clipboard Reading."
 msgstr "تم تفعيل القراءة التلقائية للحافظة."
 
-#: addon/globalPlugins/autoclip/__init__.py:130
+#: addon/globalPlugins/autoclip/__init__.py:139
 msgid "Disabled Automatic Clipboard Reading."
 msgstr "تم تعطيل القرائة التلقائية للحافظة"
 
-#: addon/globalPlugins/autoclip/__init__.py:152 buildVars.py:23
+#: addon/globalPlugins/autoclip/__init__.py:161 buildVars.py:23
 msgid "Autoclip"
 msgstr "Autoclip"
 
-#: addon/globalPlugins/autoclip/__init__.py:157
+#: addon/globalPlugins/autoclip/__init__.py:166
 msgid "Always &Interrupt before speaking the clipboard"
 msgstr "&ايقاف النطق دائمًا قبل قراءة محتوى الحافظة"
 
-#: addon/globalPlugins/autoclip/__init__.py:161
+#: addon/globalPlugins/autoclip/__init__.py:171
+#, fuzzy
+#| msgid ""
+#| "&Remember the state of automatic clipboard reading after  NVDA restart. "
+#| "This option must be enabled for use in configuration profiles"
 msgid ""
-"&Remember the state of automatic clipboard reading after  NVDA restart. This "
-"option must be enabled for use in configuration profiles"
+"&Remember automatic clipboard reading after  NVDA restart. Required for use "
+"in configuration profiles"
 msgstr ""
 "&تذكر حالة القراءة التلقائية للحافظة بعد إعادة تشغيل NVDA. يجب تمكين هذا "
 "الخيار لاستخدام الاضافة في الأوضاع"

@@ -1,3 +1,11 @@
+# Autoclip global plugin
+# A part of the Autoclip add-on for NVDA
+# Copyright (C) 2023 Mazen Alharbi
+# This file is covered by the GNU General Public License Version 2.
+# See the file LICENSE for more details.
+# If the LICENSE file is not available, you can find the  GNU General Public License Version 2 at this link:
+# https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+
 import ctypes
 from ctypes import wintypes
 
@@ -31,12 +39,12 @@ class ClipboardWatcher:
 			0,
 			0,
 			0,
-			-3,
+			winclip.HWND_MESSAGE,
 			None,
-			ctypes.windll.kernel32.GetModuleHandleW(None),
+			winclip.GetModuleHandle(None),
 			None,
 		)
-		log.debug(f"created window {self.hwnd}")
+		log.debug("created window {}".format(self.hwnd))
 
 	def start(self):
 		@ctypes.WINFUNCTYPE(ctypes.c_long, wintypes.HWND, wintypes.UINT, wintypes.WPARAM, wintypes.LPARAM)
@@ -52,7 +60,7 @@ class ClipboardWatcher:
 		)
 
 		res = winclip.AddClipboardFormatListener(self.hwnd)
-		log.debug(f"add format listener {res}")
+		log.debug("add format listener {}".format(res))
 		self.state = True
 
 	def stop(self):
@@ -72,11 +80,12 @@ class ClipboardWatcher:
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def __init__(self):
-		super().__init__()
+		super(GlobalPlugin, self).__init__()
 		self.watcher = None
 		gui.settingsDialogs.NVDASettingsDialog.categoryClasses.append(AutoclipSettings)
 		self.toolsMenu = gui.mainFrame.sysTrayIcon.toolsMenu
-		self.menuItem = self.toolsMenu.AppendCheckItem(wx.ID_ANY, _("&Automatic clipboard reading"), _("Toggles Automatic clipboard reading."))
+		self.menuItem = self.toolsMenu.AppendCheckItem(
+			wx.ID_ANY, _("&Automatic clipboard reading"), _("Toggles Automatic clipboard reading."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, lambda event: self.toggle(), self.menuItem)
 		core.postNvdaStartup.register(self.onConfigInit)
 		config.post_configProfileSwitch.register(self.onConfigInit)
@@ -87,7 +96,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if config.conf["autoclip"]["rememberState"] and not globalVars.appArgs.secure:
 			value = config.conf["autoclip"]["automaticClipboardReading"]
 			if value:
-				if self.watcher and self.watcher.state:
+				if self.watcher:
 					return  # already enabled
 				self.enable()
 			elif not value:
@@ -130,7 +139,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			ui.message(_("Disabled Automatic Clipboard Reading."))
 
 	def terminate(self):
-		super().terminate()
+		super(GlobalPlugin, self).terminate()
 		self.disable()
 		gui.settingsDialogs.NVDASettingsDialog.categoryClasses.remove(AutoclipSettings)
 		core.postNvdaStartup.unregister(self.onConfigInit)
@@ -158,7 +167,8 @@ class AutoclipSettings(gui.settingsDialogs.SettingsPanel):
 		)
 
 		self.rememberCB = sHelper.addItem(
-			wx.CheckBox(self, label=_("&Remember the state of automatic clipboard reading after  NVDA restart. This option must be enabled for use in configuration profiles"))
+			wx.CheckBox(self, label=_(
+				"&Remember automatic clipboard reading after  NVDA restart. Required for use in configuration profiles"))
 		)
 		self.interruptCB.SetValue(config.conf["autoclip"]["interrupt"])
 		self.rememberCB.SetValue(config.conf["autoclip"]["rememberState"])
@@ -166,5 +176,10 @@ class AutoclipSettings(gui.settingsDialogs.SettingsPanel):
 	def onSave(self):
 		config.conf["autoclip"]["interrupt"] = self.interruptCB.IsChecked()
 		config.conf["autoclip"]["rememberState"] = self.rememberCB.IsChecked()
-		plugin = [p for p in globalPluginHandler.runningPlugins if type(p) is GlobalPlugin][0]
-		queueHandler.queueFunction(queueHandler.eventQueue, plugin.onConfigInit)
+		try:
+			plugin = next(p for p in globalPluginHandler.runningPlugins if type(p) is GlobalPlugin)
+		except StopIteration:
+			log.exception("Unable to get plugin to apply configuration")
+			plugin = None
+		if plugin:
+			queueHandler.queueFunction(queueHandler.eventQueue, plugin.onConfigInit)

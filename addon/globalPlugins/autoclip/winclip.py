@@ -1,3 +1,12 @@
+# winclip
+# utilities of win32 to access the clipboard, regester to get clippboard update notifications, Etc.
+# A part of the Autoclip add-on for NVDA
+# Copyright (C) 2023 Mazen Alharbi
+# This file is covered by the GNU General Public License Version 2.
+# See the file LICENSE for more details.
+# If the LICENSE file is not available, you can find the  GNU General Public License Version 2 at this link:
+# https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+
 import contextlib
 import ctypes
 import time
@@ -8,6 +17,7 @@ from ctypes.wintypes import (
 	HGLOBAL,
 	HINSTANCE,
 	HMENU,
+	HMODULE,
 	HWND,
 	INT,
 	LPARAM,
@@ -22,6 +32,7 @@ from logHandler import log
 CF_UNICODETEXT = 13
 WM_CLIPBOARDUPDATE = 0x031D
 GWL_WNDPROC = -4
+HWND_MESSAGE = -3
 
 OpenClipboard = ctypes.windll.user32.OpenClipboard
 OpenClipboard.argtypes = [HWND]
@@ -50,6 +61,10 @@ GlobalLock.restype = LPVOID
 GlobalUnlock = ctypes.windll.kernel32.GlobalUnlock
 GlobalUnlock.argtypes = [HGLOBAL]
 GlobalUnlock.restype = BOOL
+
+GetModuleHandle = ctypes.windll.kernel32.GetModuleHandleW
+GetModuleHandle.argtypes = [LPCWSTR]
+GetModuleHandle.restype = HMODULE
 
 CreateWindow = ctypes.windll.user32.CreateWindowExW
 CreateWindow.argtypes = [
@@ -83,6 +98,7 @@ DefWindowProc.restype = ctypes.c_long
 
 @contextlib.contextmanager
 def clipboard(hwnd):
+	# a program could be opening the clipboard, so we'll try for at least one second to open it
 	t = time.perf_counter() + 1
 	while time.perf_counter() < t:
 		s = OpenClipboard(hwnd)
@@ -103,7 +119,7 @@ def get_clipboard_data(format=CF_UNICODETEXT):
 		return ""
 	locked_handle = GlobalLock(handle)
 	if not locked_handle:
-		log.warning("unable to lock clipboard handle")
+		log.error("unable to lock clipboard handle")
 		raise ctypes.WinError()
 	try:
 		data = ctypes.c_wchar_p(locked_handle).value
