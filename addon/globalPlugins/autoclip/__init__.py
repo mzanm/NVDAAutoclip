@@ -87,7 +87,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		gui.settingsDialogs.NVDASettingsDialog.categoryClasses.append(AutoclipSettings)
 		self.toolsMenu = gui.mainFrame.sysTrayIcon.toolsMenu
 		self.menuItem = self.toolsMenu.AppendCheckItem(
-			wx.ID_ANY, _("&Automatic clipboard reading"), _("Toggles Automatic clipboard reading."))
+			wx.ID_ANY, _("&Automatic clipboard reading"), _("Toggles Autoclip, Automatic clipboard reading."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, lambda event: self.toggle(), self.menuItem)
 		core.postNvdaStartup.register(self.onConfigInit)
 		config.post_configProfileSwitch.register(self.onConfigInit)
@@ -107,7 +107,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				self.disable()
 
 	@scriptHandler.script(
-		description=_("Toggles Automatic clipboard reading."),
+		description=_("Toggles Autoclip, Automatic clipboard reading."),
 		category=_("Autoclip"),
 		gesture="kb:NVDA+control+shift+k",
 		allowInSleepMode=True

@@ -2,13 +2,16 @@
 
 The NVDA Autoclip add-on automatically reads out the contents of the clipboard whenever it changes. This can be useful if you play a game that output's text to the clipboard and has no support to output directly to NVDA. No external programs are needed to use this add-on
 
+[Changelog](https://github.com/mzanm/NVDAAutoclip/blob/main/changelog.md)
+[Download latest version](https://github.com/mzanm/NVDAAutoclip/releases/download/v1.0.1/Autoclip-1.0.1.nvda-addon)
+
 ## Installation
 
 Compatibility: minimum compatible NVDA Version: 2019.3.
 
 Installation is the same to all other add-ons.
 
-1. Download the latest release from the [releases page](https://github.com/mzanm/NVDAAutoclip/releases).
+1. Download the latest release from the [releases page](https://github.com/mzanm/NVDAAutoclip/releases), or the direct download link above.
 
 2. Click on the download file while NVDA is running and the install add-on dialog should appear.
 

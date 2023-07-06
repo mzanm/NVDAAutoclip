@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: NVDAAutoclip\n"
-"POT-Creation-Date: 2023-07-06 13:50+0300\n"
-"PO-Revision-Date: 2023-07-06 14:01+0300\n"
+"POT-Creation-Date: 2023-07-06 16:16+0300\n"
+"PO-Revision-Date: 2023-07-06 16:18+0300\n"
 "Last-Translator: Mazen <mzanf4@gmail.com>\n"
 "Language-Team: \n"
 "Language: ar\n"
@@ -29,8 +29,8 @@ msgstr "قراءة ال&حافظة تلقائيًا"
 
 #: addon/globalPlugins/autoclip/__init__.py:90
 #: addon/globalPlugins/autoclip/__init__.py:110
-msgid "Toggles Automatic clipboard reading."
-msgstr "يبدل بين تفعيل وتعطيل القراءة التلقائية للحافظة."
+msgid "Toggles Autoclip, Automatic clipboard reading."
+msgstr "يبدل بين تفعيل وتعطيل Autoclip, القراءة التلقائية للحافظة."
 
 #: addon/globalPlugins/autoclip/__init__.py:139
 msgid "Enabled Automatic Clipboard Reading."
