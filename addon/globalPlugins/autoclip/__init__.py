@@ -79,6 +79,8 @@ class ClipboardWatcher:
 
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
+	scriptCategory = _("Autoclip")
+
 	def __init__(self):
 		super(GlobalPlugin, self).__init__()
 		self.watcher = None
@@ -106,7 +108,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	@scriptHandler.script(
 		description=_("Toggles Automatic clipboard reading."),
+		category=_("Autoclip"),
 		gesture="kb:NVDA+control+shift+k",
+		allowInSleepMode=True
 	)
 	def script_toggleAutoclip(self, gesture):
 		self.toggle()

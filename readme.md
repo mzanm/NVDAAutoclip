@@ -16,7 +16,7 @@ Installation is the same to all other add-ons.
 
 Once the add-on is installed and enable via either the shortcut or the option in the tools menu, it will automatically read out the contents of the clipboard whenever it changes. Note that by default  the add-on is activated temporarily until the next restart of NVDA. The add-on doesn't save it's state in the configuration of NVDA unless you change that behavior in the settings panel of the add-on:
 
-- **Keyboard shortcut**: Press `NVDA+Control+Shift+K` to toggle automatic clipboard reading. The shortcut can be reassigned in the NVDA input gestures dialog normally like all other gestures.
+- **Keyboard shortcut**: Press `NVDA+Control+Shift+K` to toggle automatic clipboard reading. The shortcut can be reassigned in the NVDA input gestures dialog normally like all other gestures. It can be found in the Autoclip category.
 
 - **Tools menu**: Open the NVDA tools menu and select "`Automatic clipboard reading`" to toggle it on or off.
 
