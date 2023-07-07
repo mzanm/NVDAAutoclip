@@ -20,6 +20,21 @@ jobs:
           python -m pip install --upgrade scons markdown
           sudo apt-get update -y
           sudo apt-get install -y gettext
+      - name: Extract Changelog
+        run: |
+          import re
+          with open("changelog.md", "r", encoding="UTF-8") as f:
+            text = f.read()
+          matches = []
+          for match in re.finditer("^## v\d\.\d\.\d", text, re.MULTILINE | re.IGNORECASE):
+            if match:
+              matches.append(match)
+              if len(matches) == 2:
+                break
+          string = text[matches[0].start():matches[1].start() - 1].strip() + "\n"
+          with open("release_description.md", "w", encoding="UTF-8") as f:
+            f.write(string)
+          shell: python
       - name: Build add-on
         run: scons
       - name: Create release
@@ -27,5 +42,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: ./*.nvda-addon
+          body_path: release_description.md
           prerelease: contains(github.ref, '-pre')
           fail_on_unmatched_files: true
