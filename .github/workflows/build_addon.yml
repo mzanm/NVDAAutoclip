@@ -34,7 +34,7 @@ jobs:
           string = text[matches[0].start():matches[1].start() - 1].strip() + "\n"
           with open("release_description.md", "w", encoding="UTF-8") as f:
             f.write(string)
-          shell: python
+        shell: python
       - name: Build add-on
         run: scons
       - name: Create release
