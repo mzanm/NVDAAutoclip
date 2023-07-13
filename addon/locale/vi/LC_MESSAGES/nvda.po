@@ -1,0 +1,57 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: NVDAAutoclip\n"
+"POT-Creation-Date: 2023-07-06 16:16+0300\n"
+"PO-Revision-Date: 2023-07-13 08:16+0700\n"
+"Last-Translator: \n"
+"Language-Team: nguyenninhhoang<nguyenninhhoang2005@gmail.com>\n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.3.2\n"
+"X-Poedit-Basepath: ../../../..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: addon/globalPlugins/autoclip/__init__.py\n"
+"X-Poedit-SearchPath-1: buildVars.py\n"
+
+#: addon/globalPlugins/autoclip/__init__.py:82
+#: addon/globalPlugins/autoclip/__init__.py:111
+#: addon/globalPlugins/autoclip/__init__.py:165 buildVars.py:23
+msgid "Autoclip"
+msgstr "Autoclip"
+
+#: addon/globalPlugins/autoclip/__init__.py:90
+msgid "&Automatic clipboard reading"
+msgstr "&Tự động đọc clipboard"
+
+#: addon/globalPlugins/autoclip/__init__.py:90
+#: addon/globalPlugins/autoclip/__init__.py:110
+msgid "Toggles Autoclip, Automatic clipboard reading."
+msgstr "Bật/tắt Autoclip, Tự động đọc clipboard."
+
+#: addon/globalPlugins/autoclip/__init__.py:139
+msgid "Enabled Automatic Clipboard Reading."
+msgstr "Đã bật tính năng đọc Clipboard tự động."
+
+#: addon/globalPlugins/autoclip/__init__.py:143
+msgid "Disabled Automatic Clipboard Reading."
+msgstr "Đã tắt Tự động đọc Clipboard."
+
+#: addon/globalPlugins/autoclip/__init__.py:170
+msgid "Always &Interrupt before speaking the clipboard"
+msgstr "Luôn &Ngắt trước khi đọc bảng nhớ tạm"
+
+#: addon/globalPlugins/autoclip/__init__.py:175
+msgid ""
+"&Remember automatic clipboard reading after  NVDA restart. Required for use "
+"in configuration profiles"
+msgstr ""
+"&Ghi nhớ việc đọc clipboard tự động sau khi khởi động lại NVDA. Cần thiết "
+"để sử dụng trong hồ sơ cấu hình"
+
+#: buildVars.py:26
+msgid ""
+"Automatically read the contents of the clipboard when a change is detected."
+msgstr "Tự động đọc nội dung của clipboard khi phát hiện thay đổi."
