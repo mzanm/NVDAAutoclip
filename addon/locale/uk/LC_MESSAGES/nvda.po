@@ -1,0 +1,59 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: NVDAAutoclip\n"
+"POT-Creation-Date: 2023-07-06 16:16+0300\n"
+"PO-Revision-Date: 2023-07-13 08:59+0300\n"
+"Last-Translator: Heorhii <nvda.translation.uk@gmail.com>\n"
+"Language-Team: \n"
+"Language: uk_UA\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"X-Generator: Poedit 3.3.2\n"
+"X-Poedit-Basepath: ../../../..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: addon/globalPlugins/autoclip/__init__.py\n"
+"X-Poedit-SearchPath-1: buildVars.py\n"
+
+#: addon/globalPlugins/autoclip/__init__.py:82
+#: addon/globalPlugins/autoclip/__init__.py:111
+#: addon/globalPlugins/autoclip/__init__.py:165 buildVars.py:23
+msgid "Autoclip"
+msgstr "Autoclip"
+
+#: addon/globalPlugins/autoclip/__init__.py:90
+msgid "&Automatic clipboard reading"
+msgstr "&Автоматичне читання буфера обміну"
+
+#: addon/globalPlugins/autoclip/__init__.py:90
+#: addon/globalPlugins/autoclip/__init__.py:110
+msgid "Toggles Autoclip, Automatic clipboard reading."
+msgstr ""
+"Перемикає автоматичний буфер обміну, автоматичне читання буфера обміну."
+
+#: addon/globalPlugins/autoclip/__init__.py:139
+msgid "Enabled Automatic Clipboard Reading."
+msgstr "Автоматичне читання буфера обміну увімкнено."
+
+#: addon/globalPlugins/autoclip/__init__.py:143
+msgid "Disabled Automatic Clipboard Reading."
+msgstr "Автоматичне читання буфера обміну вимкнено."
+
+#: addon/globalPlugins/autoclip/__init__.py:170
+msgid "Always &Interrupt before speaking the clipboard"
+msgstr "Завжди &переривати, перш ніж озвучити вміст буфера обміну"
+
+#: addon/globalPlugins/autoclip/__init__.py:175
+msgid ""
+"&Remember automatic clipboard reading after  NVDA restart. Required for use "
+"in configuration profiles"
+msgstr ""
+"&Зберігати автоматичне читання буфера обміну після перезавантаження NVDA. "
+"Необхідно для використання у профілях конфігурації"
+
+#: buildVars.py:26
+msgid ""
+"Automatically read the contents of the clipboard when a change is detected."
+msgstr "Автоматично читати вміст буфера обміну при виявленні зміни."

@@ -1,5 +1,9 @@
 # NVDAAutoclip changelog:
 
+## V1.0.4:
+
+- Added Ukrainian translation by Heorhii.
+
 ## V1.0.3:
 
 - Added Vietnamese translation by nguyenninhhoang.
