@@ -20,12 +20,12 @@ addon_info = {
 	# Add-on summary, usually the user visible name of the addon.
 	# Translators: Summary for this add-on
 	# to be shown on installation and add-on information found in Add-ons Manager.
-	"addon_summary": _("Autoclip"),
+	"addon_summary": _("Autoclip, automatically speak clipboard content when it changes"),
 	# Add-on description
 	# Translators: Long description to be shown for this add-on on add-on information from add-ons manager
-	"addon_description": _("Automatically read the contents of the clipboard when a change is detected."),
+	"addon_description": _("Automatically read the contents of the clipboard when a change is detected. Press NVDA + Shift + Control + K to toggle."),
 	# version
-	"addon_version": "1.0.5",
+	"addon_version": "1.1.0",
 	# Author(s)
 	"addon_author": "Mazen <mzanf4@gmail.com>",
 	# URL for the add-on documentation support
@@ -37,7 +37,7 @@ addon_info = {
 	# Minimum NVDA version supported (e.g. "2018.3.0", minor version is optional)
 	"addon_minimumNVDAVersion": 2019.3,
 	# Last NVDA version supported/tested (e.g. "2018.4.0", ideally more recent than minimum version)
-	"addon_lastTestedNVDAVersion": 2023.2,
+	"addon_lastTestedNVDAVersion": 2023.3,
 	# Add-on update channel (default is None, denoting stable releases,
 	# and for development releases, use "dev".)
 	# Do not change unless you know what you are doing!

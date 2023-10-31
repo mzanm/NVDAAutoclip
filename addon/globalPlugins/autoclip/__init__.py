@@ -30,7 +30,8 @@ addonHandler.initTranslation()
 class ClipboardWatcher:
 	def __init__(self):
 		self.state = False
-		self.hwnd = winclip.CreateWindow(
+		self.winclip = winclip.win32clip()
+		self.hwnd = self.winclip.CreateWindow(
 			0,
 			"STATIC",
 			None,
@@ -41,10 +42,16 @@ class ClipboardWatcher:
 			0,
 			winclip.HWND_MESSAGE,
 			None,
-			winclip.GetModuleHandle(None),
+			self.winclip.GetModuleHandle(None),
 			None,
 		)
 		log.debug("created window {}".format(self.hwnd))
+
+	@staticmethod
+	def message_text(text, interrupt=False):
+		if interrupt:
+			speech.cancelSpeech()
+		ui.message(text)
 
 	def start(self):
 		@ctypes.WINFUNCTYPE(ctypes.c_long, wintypes.HWND, wintypes.UINT, wintypes.WPARAM, wintypes.LPARAM)
@@ -52,30 +59,33 @@ class ClipboardWatcher:
 			if msg == winclip.WM_CLIPBOARDUPDATE:
 				queueHandler.queueFunction(queueHandler.eventQueue, self.notify)
 				return 0
-			return winclip.DefWindowProc(hwnd, msg, wparam, lparam)
+			return self.winclip.DefWindowProc(hwnd, msg, wparam, lparam)
 
 		self.proc = wndproc
-		self.oldProc = winclip.SetWindowLong(
+		self.oldProc = self.winclip.SetWindowLong(
 			self.hwnd, winclip.GWL_WNDPROC, ctypes.cast(self.proc, ctypes.c_void_p)
 		)
 
-		res = winclip.AddClipboardFormatListener(self.hwnd)
+		res = self.winclip.AddClipboardFormatListener(self.hwnd)
 		log.debug("add format listener {}".format(res))
 		self.state = True
 
 	def stop(self):
-		winclip.RemoveClipboardFormatListener(self.hwnd)
-		winclip.SetWindowLong(self.hwnd, winclip.GWL_WNDPROC, self.oldProc)
-		winclip.DestroyWindow(self.hwnd)
+		self.winclip.RemoveClipboardFormatListener(self.hwnd)
+		self.winclip.SetWindowLong(self.hwnd, winclip.GWL_WNDPROC, self.oldProc)
+		self.winclip.DestroyWindow(self.hwnd)
+		self.proc = None
+		self.oldProc = None
 		self.state = False
 
 	def notify(self):
-		with winclip.clipboard(self.hwnd):
-			data = winclip.get_clipboard_data()
+		with self.winclip.clipboard(self.hwnd):
+			data = self.winclip.get_clipboard_data()
 			if data and data.strip():
+				interrupt = False
 				if config.conf["autoclip"]["interrupt"]:
-					speech.cancelSpeech()
-				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, (data))
+					interrupt = True
+				queueHandler.queueFunction(queueHandler.eventQueue, ClipboardWatcher.message_text, data, interrupt)
 
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
@@ -150,6 +160,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		config.post_configProfileSwitch.unregister(self.onConfigInit)
 		self.toolsMenu.Delete(self.menuItem)
 		self.menuItem = None
+		self.toolsMenu = None
 
 
 confspec = {
