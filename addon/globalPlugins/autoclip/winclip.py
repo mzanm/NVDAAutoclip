@@ -38,39 +38,39 @@ HWND_MESSAGE = -3
 class win32clip:
 	def __init__(self):
 
-		self.OpenClipboard = copy_func(ctypes.windll.user32.OpenClipboard)
+		self.OpenClipboard = ctypes.windll.user32["OpenClipboard"]
 		self.OpenClipboard.argtypes = [HWND]
 		self.OpenClipboard.restype = BOOL
 
-		self.CloseClipboard = copy_func(ctypes.windll.user32.CloseClipboard)
+		self.CloseClipboard = error_check(ctypes.windll.user32["CloseClipboard"])
 		self.CloseClipboard.argtypes = []
 		self.CloseClipboard.restype = BOOL
 
-		self.GetClipboardData = copy_func(ctypes.windll.user32.GetClipboardData)
+		self.GetClipboardData = error_check(ctypes.windll.user32["GetClipboardData"])
 		self.GetClipboardData.argtypes = [UINT]
 		self.GetClipboardData.restype = HANDLE
 
-		self.AddClipboardFormatListener = copy_func(ctypes.windll.user32.AddClipboardFormatListener)
+		self.AddClipboardFormatListener = error_check(ctypes.windll.user32["AddClipboardFormatListener"])
 		self.AddClipboardFormatListener.argtypes = [HWND]
 		self.AddClipboardFormatListener.restype = BOOL
 
-		self.RemoveClipboardFormatListener = copy_func(ctypes.windll.user32.RemoveClipboardFormatListener)
+		self.RemoveClipboardFormatListener = error_check(ctypes.windll.user32["RemoveClipboardFormatListener"])
 		self.RemoveClipboardFormatListener.argtypes = [HWND]
 		self.RemoveClipboardFormatListener.restype = BOOL
 
-		self.GlobalLock = copy_func(ctypes.windll.kernel32.GlobalLock)
+		self.GlobalLock = error_check(ctypes.windll.kernel32["GlobalLock"])
 		self.GlobalLock.argtypes = [HGLOBAL]
 		self.GlobalLock.restype = LPVOID
 
-		self.GlobalUnlock = copy_func(ctypes.windll.kernel32.GlobalUnlock)
+		self.GlobalUnlock = error_check(ctypes.windll.kernel32["GlobalUnlock"])
 		self.GlobalUnlock.argtypes = [HGLOBAL]
 		self.GlobalUnlock.restype = BOOL
 
-		self.GetModuleHandle = copy_func(ctypes.windll.kernel32.GetModuleHandleW)
+		self.GetModuleHandle = error_check(ctypes.windll.kernel32["GetModuleHandleW"])
 		self.GetModuleHandle.argtypes = [LPCWSTR]
 		self.GetModuleHandle.restype = HMODULE
 
-		self.CreateWindow = copy_func(ctypes.windll.user32.CreateWindowExW)
+		self.CreateWindow = error_check(ctypes.windll.user32["CreateWindowExW"])
 		self.CreateWindow.argtypes = [
 			DWORD,
 			LPCWSTR,
@@ -87,23 +87,23 @@ class win32clip:
 		]
 		self.CreateWindow.restype = HWND
 
-		self.DestroyWindow = copy_func(ctypes.windll.user32.DestroyWindow)
+		self.DestroyWindow = error_check(ctypes.windll.user32["DestroyWindow"])
 		self.DestroyWindow.argtypes = [HWND]
 		self.DestroyWindow.restype = BOOL
 
-		self.SetWindowLong = copy_func(ctypes.windll.user32.SetWindowLongW)
+		self.SetWindowLong = error_check(ctypes.windll.user32["SetWindowLongW"])
 		self.SetWindowLong.argtypes = [HWND, INT, ctypes.c_void_p]
 		self.SetWindowLong.restype = ctypes.c_long
 
-		self.DefWindowProc = copy_func(ctypes.windll.user32.DefWindowProcW)
+		self.DefWindowProc = ctypes.windll.user32["DefWindowProcW"]
 		self.DefWindowProc.argtypes = [HWND, UINT, WPARAM, LPARAM]
 		self.DefWindowProc.restype = ctypes.c_long
 
 	@contextlib.contextmanager
 	def clipboard(self, hwnd):
-		# a program could be opening the clipboard, so we'll try for at least half a second to open it
-		t = time.perf_counter() + 0.5
-		while time.perf_counter() < t:
+		# a program could be opening the clipboard, so we'll try for at least a quartor of a second to open it
+		t = time.time() + 0.25
+		while time.time() < t:
 			s = self.OpenClipboard(hwnd)
 			if not s:
 				log.warning("Error while trying to open clipboard.", exc_info=ctypes.WinError())
@@ -118,11 +118,9 @@ class win32clip:
 	def get_clipboard_data(self, format=CF_UNICODETEXT):
 		handle = self.GetClipboardData(format)
 		if not handle:
+			log.warning("Could not get clipboard data", exc_info= ctypes.WinError())
 			return ""
 		locked_handle = self.GlobalLock(handle)
-		if not locked_handle:
-			log.error("unable to lock clipboard handle")
-			raise ctypes.WinError()
 		try:
 			data = ctypes.c_wchar_p(locked_handle).value
 			return data if data else ""
@@ -130,8 +128,16 @@ class win32clip:
 			self.GlobalUnlock(handle)
 
 
-def copy_func(func):
-	# copy a ctypes func_ptr object
-		func_type = type(func)
-		coppied_func = func_type.from_address(ctypes.addressof(func))
-		return coppied_func
+def error_check(func):
+	def wrapper(*args, **kwargs):
+		result = func(*args, **kwargs)
+		if not result:
+			error_code = ctypes.get_last_error()
+
+			if error_code != 0:
+				error_message = f"Error in {func.__name__}"
+				exc = ctypes.WinError(error_code)
+				log.error(error_message, exc_info= exc)
+		return result
+
+	return wrapper

@@ -1,5 +1,14 @@
 # NVDAAutoclip changelog:
 
+## V1.2.0:
+
+- NVDA 2024.1 support.
+- fixed double speaking of the same text.
+- added unassigned gesture to toggle interrupting speech before speaking the clipboard.
+- You can now hide the option in the tools menu to toggle Autoclip. It can be found in the settings.
+- Improved performance.
+
+
 ## V1.1.0:
 
 - enternal code optimizations to fix compatibility issue with DECTalk add-on and other bugs.
@@ -32,4 +41,3 @@
 ## V1.0.0:
 
 - Initial release.
-

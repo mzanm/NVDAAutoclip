@@ -8,6 +8,7 @@
 
 import ctypes
 from ctypes import wintypes
+import time
 
 import addonHandler
 import config
@@ -30,6 +31,8 @@ addonHandler.initTranslation()
 class ClipboardWatcher:
 	def __init__(self):
 		self.state = False
+		self.last_time = 0 # last time a clipboard notification was sent
+		self.last_data = "" # last text of a clipboard notification
 		self.winclip = winclip.win32clip()
 		self.hwnd = self.winclip.CreateWindow(
 			0,
@@ -57,8 +60,11 @@ class ClipboardWatcher:
 		@ctypes.WINFUNCTYPE(ctypes.c_long, wintypes.HWND, wintypes.UINT, wintypes.WPARAM, wintypes.LPARAM)
 		def wndproc(hwnd, msg, wparam, lparam):
 			if msg == winclip.WM_CLIPBOARDUPDATE:
-				queueHandler.queueFunction(queueHandler.eventQueue, self.notify)
-				return 0
+				try:
+					self.notify()
+					return 0
+				except Exception as e:
+					log.exception("Error in window proc notify")
 			return self.winclip.DefWindowProc(hwnd, msg, wparam, lparam)
 
 		self.proc = wndproc
@@ -77,15 +83,22 @@ class ClipboardWatcher:
 		self.proc = None
 		self.oldProc = None
 		self.state = False
+		self.last_time = 0
+		self.last_data = ""
 
 	def notify(self):
 		with self.winclip.clipboard(self.hwnd):
 			data = self.winclip.get_clipboard_data()
 			if data and data.strip():
+				if self.last_data == data and time.time() - self.last_time < 0.1:
+					self.last_time = time.time()
+					return
 				interrupt = False
 				if config.conf["autoclip"]["interrupt"]:
 					interrupt = True
 				queueHandler.queueFunction(queueHandler.eventQueue, ClipboardWatcher.message_text, data, interrupt)
+				self.last_data = data
+				self.last_time = time.time()
 
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
@@ -94,27 +107,27 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def __init__(self):
 		super(GlobalPlugin, self).__init__()
 		self.watcher = None
+		self.menuItem = None
 		gui.settingsDialogs.NVDASettingsDialog.categoryClasses.append(AutoclipSettings)
-		self.toolsMenu = gui.mainFrame.sysTrayIcon.toolsMenu
-		self.menuItem = self.toolsMenu.AppendCheckItem(
-			wx.ID_ANY, _("&Automatic clipboard reading"), _("Toggles Autoclip, Automatic clipboard reading."))
-		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, lambda event: self.toggle(), self.menuItem)
 		core.postNvdaStartup.register(self.onConfigInit)
 		config.post_configProfileSwitch.register(self.onConfigInit)
 
 	def onConfigInit(self):
 		# called at NVDA startup if the add-on is configured to remember the state is enabled or disabled,
 		#  as well as when a configuration profile is switched.
-		if config.conf["autoclip"]["rememberState"] and not globalVars.appArgs.secure:
+		if globalVars.appArgs.secure:
+			return
+		if config.conf["autoclip"]["rememberState"]:
 			value = config.conf["autoclip"]["automaticClipboardReading"]
-			if value:
-				if self.watcher:
-					return  # already enabled
+			if value and not self.watcher:
 				self.enable()
-			elif not value:
-				if not self.watcher:
-					return  # already disabled
+			elif not value and self.watcher:
 				self.disable()
+
+		if config.conf["autoclip"]["showInToolsMenu"] and not self.menuItem:
+			self.addMenuItem()
+		elif not config.conf["autoclip"]["showInToolsMenu"] and self.menuItem:
+			self.deleteMenuItem()
 
 	@scriptHandler.script(
 		description=_("Toggles Autoclip, Automatic clipboard reading."),
@@ -125,13 +138,27 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def script_toggleAutoclip(self, gesture):
 		self.toggle()
 
+	@scriptHandler.script(
+		description = _("Toggles Autoclip, interrupt speech before speaking the clipboard"),
+		category=_("Autoclip"),
+	)
+
+	def script_toggleInterrupt(self, gesture):
+		if not config.conf["autoclip"]["interrupt"]:
+			config.conf["autoclip"]["interrupt"] = True
+			ui.message_('Enabled "Interrupt before speaking the clipboard"')
+		else:
+			config.conf["autoclip"]["interrupt"] = False
+			ui.message_('Disabled "Interrupt before speaking the clipboard"')
+
 	def enable(self):
 		if self.watcher:
 			return
 		self.watcher = ClipboardWatcher()
 		self.watcher.start()
 		log.debug("Enabled")
-		self.menuItem.Check()
+		if self.menuItem:
+			self.menuItem.Check()
 
 	def disable(self):
 		if not self.watcher:
@@ -140,7 +167,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			self.watcher.stop()
 		self.watcher = None
 		log.debug("Disabled")
-		self.menuItem.Check(False)
+		if self.menuItem:
+			self.menuItem.Check(False)
 
 	def toggle(self):
 		if not self.watcher:
@@ -152,21 +180,38 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			config.conf["autoclip"]["automaticClipboardReading"] = False
 			ui.message(_("Disabled Automatic Clipboard Reading."))
 
+	def addMenuItem(self):
+		if self.menuItem:
+			return
+		self.toolsMenu = gui.mainFrame.sysTrayIcon.toolsMenu
+		self.menuItem = self.toolsMenu.AppendCheckItem(
+			wx.ID_ANY, _("&Automatic clipboard reading"), _("Toggles Autoclip, Automatic clipboard reading."))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, lambda event: self.toggle(), self.menuItem)
+		if self.watcher and self.watcher.state:
+			self.menuItem.Check()
+
+	def deleteMenuItem(self):
+		if not self.menuItem:
+			return
+		self.toolsMenu.Delete(self.menuItem)
+		self.menuItem = None
+		self.toolsMenu = None
+
 	def terminate(self):
 		super(GlobalPlugin, self).terminate()
 		self.disable()
 		gui.settingsDialogs.NVDASettingsDialog.categoryClasses.remove(AutoclipSettings)
+		self.deleteMenuItem()
 		core.postNvdaStartup.unregister(self.onConfigInit)
 		config.post_configProfileSwitch.unregister(self.onConfigInit)
-		self.toolsMenu.Delete(self.menuItem)
-		self.menuItem = None
-		self.toolsMenu = None
 
 
 confspec = {
 	"interrupt": "boolean(default=false)",
 	"rememberState": "boolean(default=false)",
 	"automaticClipboardReading": "boolean(default=false)",
+	"showInToolsMenu": "boolean(default=true)",
+
 }
 
 config.conf.spec["autoclip"] = confspec
@@ -185,12 +230,19 @@ class AutoclipSettings(gui.settingsDialogs.SettingsPanel):
 			wx.CheckBox(self, label=_(
 				"&Remember automatic clipboard reading after  NVDA restart. Required for use in configuration profiles"))
 		)
+
+		self.showCB = sHelper.addItem(
+			wx.CheckBox(self, label=_("&Show in the NVDA tools menu"))
+		)
+
 		self.interruptCB.SetValue(config.conf["autoclip"]["interrupt"])
 		self.rememberCB.SetValue(config.conf["autoclip"]["rememberState"])
+		self.showCB.SetValue(config.conf["autoclip"]["showInToolsMenu"])
 
 	def onSave(self):
 		config.conf["autoclip"]["interrupt"] = self.interruptCB.IsChecked()
 		config.conf["autoclip"]["rememberState"] = self.rememberCB.IsChecked()
+		config.conf["autoclip"]["showInToolsMenu"] = self.showCB.IsChecked()
 		try:
 			plugin = next(p for p in globalPluginHandler.runningPlugins if type(p) is GlobalPlugin)
 		except StopIteration:
