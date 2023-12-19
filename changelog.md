@@ -3,9 +3,15 @@
 ## V1.2.0:
 
 - NVDA 2024.1 support.
+
 - fixed double speaking of the same text.
+
 - added unassigned gesture to toggle interrupting speech before speaking the clipboard.
+
 - You can now hide the option in the tools menu to toggle Autoclip. It can be found in the settings.
+
+- When a large block of text is coppied to the clipboard, it will be split into chunks of 300 character chunks and be spoken seperatly to avoid causing issues with speech synthesizers.
+
 - Improved performance.
 
 

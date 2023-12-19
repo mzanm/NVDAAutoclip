@@ -54,7 +54,14 @@ class ClipboardWatcher:
 	def message_text(text, interrupt=False):
 		if interrupt:
 			speech.cancelSpeech()
-		ui.message(text)
+		if len(text) > 500:
+			chunks = []
+			for i in range(0, len(text), 300):
+				chunks.append(text[i:i + 300])
+			for chunk in chunks:
+				ui.message(chunk)
+		else:
+			ui.message(text)
 
 	def start(self):
 		@ctypes.WINFUNCTYPE(ctypes.c_long, wintypes.HWND, wintypes.UINT, wintypes.WPARAM, wintypes.LPARAM)
@@ -89,7 +96,7 @@ class ClipboardWatcher:
 	def notify(self):
 		with self.winclip.clipboard(self.hwnd):
 			data = self.winclip.get_clipboard_data()
-			if data and data.strip():
+			if data and not data.isspace() and len(data) < 15000:
 				if self.last_data == data and time.time() - self.last_time < 0.1:
 					self.last_time = time.time()
 					return
@@ -139,17 +146,17 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.toggle()
 
 	@scriptHandler.script(
-		description = _("Toggles Autoclip, interrupt speech before speaking the clipboard"),
+		description = _("Toggles if Autoclip should interrupt speech before speaking the clipboard"),
 		category=_("Autoclip"),
 	)
 
 	def script_toggleInterrupt(self, gesture):
 		if not config.conf["autoclip"]["interrupt"]:
 			config.conf["autoclip"]["interrupt"] = True
-			ui.message_('Enabled "Interrupt before speaking the clipboard"')
+			ui.message(_('Enabled "Interrupt before speaking the clipboard"'))
 		else:
 			config.conf["autoclip"]["interrupt"] = False
-			ui.message_('Disabled "Interrupt before speaking the clipboard"')
+			ui.message(_('Disabled "Interrupt before speaking the clipboard"'))
 
 	def enable(self):
 		if self.watcher:
