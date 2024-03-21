@@ -32,7 +32,7 @@ XGETTEXT_COMMON_ARGS = (
 
 
 def generate(env):
-	env.SetDefault(gettext_package_bugs_address="example@example.com")
+	env.SetDefault(gettext_package_bugs_address="None")
 	env.SetDefault(gettext_package_name="")
 	env.SetDefault(gettext_package_version="")
 

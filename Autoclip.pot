@@ -1,0 +1,84 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the 'Autoclip' package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: 'Autoclip' '1.2.0'\n"
+"Report-Msgid-Bugs-To: 'mzanf4@gmail.com'\n"
+"POT-Creation-Date: 2024-03-22 02:08+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: addon\globalPlugins\autoclip\__init__.py:112
+#: addon\globalPlugins\autoclip\__init__.py:141
+#: addon\globalPlugins\autoclip\__init__.py:150
+#: addon\globalPlugins\autoclip\__init__.py:228
+msgid "Autoclip"
+msgstr ""
+
+#: addon\globalPlugins\autoclip\__init__.py:140
+#: addon\globalPlugins\autoclip\__init__.py:195
+msgid "Toggles Autoclip, Automatic clipboard reading."
+msgstr ""
+
+#: addon\globalPlugins\autoclip\__init__.py:149
+msgid ""
+"Toggles if Autoclip should interrupt speech before speaking the clipboard"
+msgstr ""
+
+#: addon\globalPlugins\autoclip\__init__.py:156
+msgid "Enabled \"Interrupt before speaking the clipboard\""
+msgstr ""
+
+#: addon\globalPlugins\autoclip\__init__.py:159
+msgid "Disabled \"Interrupt before speaking the clipboard\""
+msgstr ""
+
+#: addon\globalPlugins\autoclip\__init__.py:184
+msgid "Enabled Automatic Clipboard Reading."
+msgstr ""
+
+#: addon\globalPlugins\autoclip\__init__.py:188
+msgid "Disabled Automatic Clipboard Reading."
+msgstr ""
+
+#: addon\globalPlugins\autoclip\__init__.py:195
+msgid "&Automatic clipboard reading"
+msgstr ""
+
+#: addon\globalPlugins\autoclip\__init__.py:233
+msgid "Always &Interrupt before speaking the clipboard"
+msgstr ""
+
+#: addon\globalPlugins\autoclip\__init__.py:238
+msgid ""
+"&Remember automatic clipboard reading after  NVDA restart. Required for use "
+"in configuration profiles"
+msgstr ""
+
+#: addon\globalPlugins\autoclip\__init__.py:242
+msgid "&Show in the NVDA tools menu"
+msgstr ""
+
+#. Add-on summary, usually the user visible name of the addon.
+#. Translators: Summary for this add-on
+#. to be shown on installation and add-on information found in Add-ons Manager.
+#: buildVars.py:23
+msgid "Autoclip, automatically speak clipboard content when it changes"
+msgstr ""
+
+#. Add-on description
+#. Translators: Long description to be shown for this add-on on add-on information from add-ons manager
+#: buildVars.py:26
+msgid ""
+"Automatically read the contents of the clipboard when a change is detected. "
+"Press NVDA + Shift + Control + K to toggle."
+msgstr ""
