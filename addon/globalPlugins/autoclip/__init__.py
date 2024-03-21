@@ -48,16 +48,16 @@ class ClipboardWatcher:
 			self.winclip.GetModuleHandle(None),
 			None,
 		)
-		log.debug("created window {}".format(self.hwnd))
+		log.debug("created window %d", self.hwnd)
 
 	@staticmethod
 	def message_text(text, interrupt=False):
 		if interrupt:
 			speech.cancelSpeech()
-		if len(text) > 500:
+		if len(text) > 1000:
 			chunks = []
-			for i in range(0, len(text), 300):
-				chunks.append(text[i:i + 300])
+			for i in range(0, len(text), 500):
+				chunks.append(text[i:i + 500])
 			for chunk in chunks:
 				ui.message(chunk)
 		else:
@@ -70,7 +70,7 @@ class ClipboardWatcher:
 				try:
 					self.notify()
 					return 0
-				except Exception as e:
+				except Exception:
 					log.exception("Error in window proc notify")
 			return self.winclip.DefWindowProc(hwnd, msg, wparam, lparam)
 
@@ -80,7 +80,7 @@ class ClipboardWatcher:
 		)
 
 		res = self.winclip.AddClipboardFormatListener(self.hwnd)
-		log.debug("add format listener {}".format(res))
+		log.debug("add format listener %d", res)
 		self.state = True
 
 	def stop(self):
@@ -97,15 +97,15 @@ class ClipboardWatcher:
 		with self.winclip.clipboard(self.hwnd):
 			data = self.winclip.get_clipboard_data()
 			if data and not data.isspace() and len(data) < 15000:
-				if self.last_data == data and time.time() - self.last_time < 0.1:
-					self.last_time = time.time()
+				if self.last_data == data and time.monotonic() - self.last_time < 0.1:
+					self.last_time = time.monotonic()
 					return
 				interrupt = False
-				if config.conf["autoclip"]["interrupt"]:
+				if config.conf["autoclip"]["interrupt"] and time.monotonic() - self.last_time > 0.05:
 					interrupt = True
 				queueHandler.queueFunction(queueHandler.eventQueue, ClipboardWatcher.message_text, data, interrupt)
 				self.last_data = data
-				self.last_time = time.time()
+				self.last_time = time.monotonic()
 
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):

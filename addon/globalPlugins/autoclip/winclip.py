@@ -102,14 +102,14 @@ class win32clip:
 	@contextlib.contextmanager
 	def clipboard(self, hwnd):
 		# a program could be opening the clipboard, so we'll try for at least a quartor of a second to open it
-		t = time.time() + 0.25
-		while time.time() < t:
+		t = time.monotonic() + 0.25
+		while time.monotonic() < t:
 			s = self.OpenClipboard(hwnd)
-			if not s:
-				log.warning("Error while trying to open clipboard.", exc_info=ctypes.WinError())
 			if s:
 				break
-			time.sleep(0.01)
+			if not s:
+				log.warning("Error while trying to open clipboard.", exc_info=ctypes.WinError())
+				time.sleep(0.01)
 		try:
 			yield
 		finally:

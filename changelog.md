@@ -12,6 +12,8 @@
 
 - When a large block of text is coppied to the clipboard, it will be split into chunks of 300 character chunks and be spoken seperatly to avoid causing issues with speech synthesizers.
 
+- When the "always interrupt" option is enabled, rappid clipboard updates will no longer  interrupt speech.
+
 - Improved performance.
 
 
