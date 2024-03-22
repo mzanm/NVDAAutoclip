@@ -1,8 +1,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: NVDAAutoclip\n"
-"POT-Creation-Date: 2023-07-06 16:16+0300\n"
-"PO-Revision-Date: 2023-07-06 16:18+0300\n"
+"Report-Msgid-Bugs-To: 'mzanf4@gmail.com'\n"
+"POT-Creation-Date: 2024-03-22 02:08+0300\n"
+"PO-Revision-Date: 2024-03-22 03:18+0300\n"
 "Last-Translator: Mazen <mzanf4@gmail.com>\n"
 "Language-Team: \n"
 "Language: ar\n"
@@ -11,40 +12,55 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.4.2\n"
 "X-Poedit-Basepath: ../../../..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: addon/globalPlugins/autoclip/__init__.py\n"
 "X-Poedit-SearchPath-1: buildVars.py\n"
 
-#: addon/globalPlugins/autoclip/__init__.py:82
-#: addon/globalPlugins/autoclip/__init__.py:111
-#: addon/globalPlugins/autoclip/__init__.py:165 buildVars.py:23
+#: addon\globalPlugins\autoclip\__init__.py:112
+#: addon\globalPlugins\autoclip\__init__.py:141
+#: addon\globalPlugins\autoclip\__init__.py:150
+#: addon\globalPlugins\autoclip\__init__.py:228
 msgid "Autoclip"
 msgstr "Autoclip"
 
-#: addon/globalPlugins/autoclip/__init__.py:90
-msgid "&Automatic clipboard reading"
-msgstr "قراءة ال&حافظة تلقائيًا"
-
-#: addon/globalPlugins/autoclip/__init__.py:90
-#: addon/globalPlugins/autoclip/__init__.py:110
+#: addon\globalPlugins\autoclip\__init__.py:140
+#: addon\globalPlugins\autoclip\__init__.py:195
 msgid "Toggles Autoclip, Automatic clipboard reading."
 msgstr "يبدل بين تفعيل وتعطيل Autoclip, القراءة التلقائية للحافظة."
 
-#: addon/globalPlugins/autoclip/__init__.py:139
+#: addon\globalPlugins\autoclip\__init__.py:149
+msgid ""
+"Toggles if Autoclip should interrupt speech before speaking the clipboard"
+msgstr ""
+"يقوم بتبديل إذا كان يجب على Autoclip أن يقاطع الكلام قبل نطق محتوى الحافظة."
+
+#: addon\globalPlugins\autoclip\__init__.py:156
+msgid "Enabled \"Interrupt before speaking the clipboard\""
+msgstr "تم تمكين مقاطعة النطق قبل قرائة محتوى الحافظة"
+
+#: addon\globalPlugins\autoclip\__init__.py:159
+msgid "Disabled \"Interrupt before speaking the clipboard\""
+msgstr "تم تعطيل مقاطعة النطق قبل قرائة محتوى الحافظة"
+
+#: addon\globalPlugins\autoclip\__init__.py:184
 msgid "Enabled Automatic Clipboard Reading."
 msgstr "تم تفعيل القراءة التلقائية للحافظة."
 
-#: addon/globalPlugins/autoclip/__init__.py:143
+#: addon\globalPlugins\autoclip\__init__.py:188
 msgid "Disabled Automatic Clipboard Reading."
-msgstr "تم تعطيل القرائة التلقائية للحافظة"
+msgstr "تم تعطيل القرائة التلقائية للحافظة."
 
-#: addon/globalPlugins/autoclip/__init__.py:170
+#: addon\globalPlugins\autoclip\__init__.py:195
+msgid "&Automatic clipboard reading"
+msgstr "قراءة ال&حافظة تلقائيًا"
+
+#: addon\globalPlugins\autoclip\__init__.py:233
 msgid "Always &Interrupt before speaking the clipboard"
 msgstr "&ايقاف النطق دائمًا قبل قراءة محتوى الحافظة"
 
-#: addon/globalPlugins/autoclip/__init__.py:175
+#: addon\globalPlugins\autoclip\__init__.py:238
 msgid ""
 "&Remember automatic clipboard reading after  NVDA restart. Required for use "
 "in configuration profiles"
@@ -52,7 +68,23 @@ msgstr ""
 "تذكر &حالة القراءة التلقائية للحافظة بعد إعادة تشغيل NVDA. يجب تمكين هذا "
 "الخيار لاستخدام الاضافة في الأوضاع"
 
+#: addon\globalPlugins\autoclip\__init__.py:242
+msgid "&Show in the NVDA tools menu"
+msgstr "إ&ظهار في قائمة أدوات NVDA"
+
+#. Add-on summary, usually the user visible name of the addon.
+#. Translators: Summary for this add-on
+#. to be shown on installation and add-on information found in Add-ons Manager.
+#: buildVars.py:23
+msgid "Autoclip, automatically speak clipboard content when it changes"
+msgstr "Autoclip, نطق محتوى الحافظة تلقائيًا عندما يتغير"
+
+#. Add-on description
+#. Translators: Long description to be shown for this add-on on add-on information from add-ons manager
 #: buildVars.py:26
 msgid ""
-"Automatically read the contents of the clipboard when a change is detected."
-msgstr "يقرأ محتويات الحافظة تلقائيًا عند اكتشاف تغيير."
+"Automatically read the contents of the clipboard when a change is detected. "
+"Press NVDA + Shift + Control + K to toggle."
+msgstr ""
+"يقرأ النص الموجود في الحافظة تلقائيًا عندما يتغير. قم بضغط \"NVDA + Shift + "
+"Control + K\" للتشغيل والتعطيل."
