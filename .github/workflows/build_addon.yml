@@ -9,17 +9,17 @@ jobs:
   build-and-release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip setuptools wheel
-          python -m pip install --upgrade scons markdown
           sudo apt-get update -y
           sudo apt-get install -y gettext
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install --upgrade scons markdown
       - name: Extract Changelog
         run: |
           import re
@@ -36,12 +36,16 @@ jobs:
             f.write(string)
         shell: python
       - name: Build add-on
-        run: scons
+        run: |
+          scons
+          scons pot
       - name: Create release
         if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
-          files: ./*.nvda-addon
-          body_path: release_description.md
+          files: |
+            ./*.nvda-addon
+            ./*.pot
+            body_path: release_description.md
           prerelease: contains(github.ref, '-pre')
           fail_on_unmatched_files: true
