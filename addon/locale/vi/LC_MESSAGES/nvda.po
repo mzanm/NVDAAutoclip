@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.4.2\n"
 "X-Poedit-Basepath: ../../../..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: addon/globalPlugins/autoclip/__init__.py\n"
@@ -53,5 +53,32 @@ msgstr ""
 
 #: buildVars.py:26
 msgid ""
-"Automatically read the contents of the clipboard when a change is detected."
-msgstr "Tự động đọc nội dung của clipboard khi phát hiện thay đổi."
+"Automatically read the contents of the clipboard when a change is detected. "
+"Press NVDA + Shift + Control + K to toggle."
+msgstr ""
+"Tự động đọc nội dung của clipboard khi phát hiện thay đổi."
+"Nhấn NVDA + Shift + Control + K để chuyển đổi."
+
+#: addon\globalPlugins\autoclip\__init__.py:149
+msgid ""
+"Toggles if Autoclip should interrupt speech before speaking the clipboard"
+msgstr "Chuyển đổi nếu Autoclip làm gián đoạn lời nói trước khi nói vào bảng nhớ tạm"
+
+#: addon\globalPlugins\autoclip\__init__.py:156
+msgid "Enabled \"Interrupt before speaking the clipboard\""
+msgstr "Đã bật \"Ngắt trước khi nói bảng nhớ tạm\""
+
+#: addon\globalPlugins\autoclip\__init__.py:159
+msgid "Disabled \"Interrupt before speaking the clipboard\""
+msgstr "Đã tắt \"Ngắt trước khi nói bảng nhớ tạm\""
+
+#: addon\globalPlugins\autoclip\__init__.py:242
+msgid "&Show in the NVDA tools menu"
+msgstr "&Hiển thị trong menu công cụ của NVDA"
+
+#. Add-on summary, usually the user visible name of the addon.
+#. Translators: Summary for this add-on
+#. to be shown on installation and add-on information found in Add-ons Manager.
+#: buildVars.py:23
+msgid "Autoclip, automatically speak clipboard content when it changes"
+msgstr "Autoclip, tự động đọc nội dung clipboard khi nó thay đổi"
