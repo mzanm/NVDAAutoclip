@@ -1,0 +1,91 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the 'Autoclip' package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: 'Autoclip' '1.2.0'\n"
+"Report-Msgid-Bugs-To: 'mzanf4@gmail.com'\n"
+"POT-Creation-Date: 2024-03-22 02:08+0300\n"
+"PO-Revision-Date: 2024-07-02 21:27+0300\n"
+"Last-Translator: Bora FIRLANGEÇ <borafirlangec@gmail.com>\n"
+"Language-Team: \n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.4\n"
+
+#: addon\globalPlugins\autoclip\__init__.py:112
+#: addon\globalPlugins\autoclip\__init__.py:141
+#: addon\globalPlugins\autoclip\__init__.py:150
+#: addon\globalPlugins\autoclip\__init__.py:228
+msgid "Autoclip"
+msgstr "Otomatik Pano"
+
+#: addon\globalPlugins\autoclip\__init__.py:140
+#: addon\globalPlugins\autoclip\__init__.py:195
+msgid "Toggles Autoclip, Automatic clipboard reading."
+msgstr "Otomatik klip, Otomatik pano okuma arasında geçiş yapar."
+
+#: addon\globalPlugins\autoclip\__init__.py:149
+msgid ""
+"Toggles if Autoclip should interrupt speech before speaking the clipboard"
+msgstr ""
+"Autoclip'in panoya konuşmadan önce konuşmayı kesmesi gerekip gerekmediğini "
+"değiştirir"
+
+#: addon\globalPlugins\autoclip\__init__.py:156
+msgid "Enabled \"Interrupt before speaking the clipboard\""
+msgstr "\"Panoya seslenmeden önce ara ver\" etkinleştirildi"
+
+#: addon\globalPlugins\autoclip\__init__.py:159
+msgid "Disabled \"Interrupt before speaking the clipboard\""
+msgstr "\"Panoya seslenmeden önce ara ver\" devre dışı bırakıldı"
+
+#: addon\globalPlugins\autoclip\__init__.py:184
+msgid "Enabled Automatic Clipboard Reading."
+msgstr "Otomatik Pano Okuma Etkinleştirildi."
+
+#: addon\globalPlugins\autoclip\__init__.py:188
+msgid "Disabled Automatic Clipboard Reading."
+msgstr "Otomatik Pano Okuması Devre Dışı Bırakıldı."
+
+#: addon\globalPlugins\autoclip\__init__.py:195
+msgid "&Automatic clipboard reading"
+msgstr "&Otomatik pano okuma"
+
+#: addon\globalPlugins\autoclip\__init__.py:233
+msgid "Always &Interrupt before speaking the clipboard"
+msgstr "Panoya konuşmadan önce her zaman &Araya gir"
+
+#: addon\globalPlugins\autoclip\__init__.py:238
+msgid ""
+"&Remember automatic clipboard reading after  NVDA restart. Required for use "
+"in configuration profiles"
+msgstr ""
+"&NVDA yeniden başlatıldıktan sonra otomatik pano okumasını hatırla. "
+"Yapılandırma profillerinde kullanım için gereklidir"
+
+#: addon\globalPlugins\autoclip\__init__.py:242
+msgid "&Show in the NVDA tools menu"
+msgstr "NVDA araçları menüsünde &Göster"
+
+#. Add-on summary, usually the user visible name of the addon.
+#. Translators: Summary for this add-on
+#. to be shown on installation and add-on information found in Add-ons Manager.
+#: buildVars.py:23
+msgid "Autoclip, automatically speak clipboard content when it changes"
+msgstr "Autoclip, pano içeriğini değiştiğinde otomatik olarak seslendirir"
+
+#. Add-on description
+#. Translators: Long description to be shown for this add-on on add-on information from add-ons manager
+#: buildVars.py:26
+msgid ""
+"Automatically read the contents of the clipboard when a change is detected. "
+"Press NVDA + Shift + Control + K to toggle."
+msgstr ""
+"Bir değişiklik algılandığında panonun içeriğini otomatik olarak okuyun. "
+"Geçiş yapmak için NVDA + Shift + Control + K tuşlarına basın."
