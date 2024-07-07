@@ -118,8 +118,8 @@ class win32clip:
         finally:
             self.CloseClipboard()
 
-    def get_clipboard_data(self, format=CF_UNICODETEXT):
-        handle = self.GetClipboardData(format)
+    def get_clipboard_data(self, data_format=CF_UNICODETEXT):
+        handle = self.GetClipboardData(data_format)
         if not handle:
             log.warning("Could not get clipboard data", exc_info=ctypes.WinError())
             return ""
