@@ -1,5 +1,15 @@
 # NVDAAutoclip changelog:
 
+
+## V1.2.0:
+
+- Turkish translation by @babaprogramlar.
+
+- Finnish translation by @jkinnunen.
+
+- Updated the Vietnamese translation by nguyenninhhoang.
+
+
 ## V1.2.0:
 
 - NVDA 2024.1 support.
