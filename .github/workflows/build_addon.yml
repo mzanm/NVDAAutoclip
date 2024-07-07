@@ -46,6 +46,6 @@ jobs:
           files: |
             ./*.nvda-addon
             ./*.pot
-            body_path: release_description.md
+          body_path: release_description.md
           prerelease: contains(github.ref, '-pre')
           fail_on_unmatched_files: true
