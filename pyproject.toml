@@ -1,0 +1,14 @@
+[project]
+name = "autoclip"
+
+[tool.ruff]
+src = ["addon", "../nvda/source"]
+line-length = 100
+target-version = "py311"
+builtins = ["_"]
+[tool.ruff.lint]
+select = ["E", "A", "F", "B", "UP", "PL", "RUF", "SIM", "C4", "INP", "RET", "PIE", "G", "S", "PERF"]
+ignore = ["E501"]
+
+[tool.ruff.format]
+line-ending = "lf"
