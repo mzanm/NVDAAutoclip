@@ -1,7 +1,9 @@
 # NVDAAutoclip changelog:
+## V1.2.2:
 
+This version is mostly 1.2.1, but I forgot and called v1.2.1 v1.2.0, therefore this is a rerelease called v1.2.2 to clear up any possible confusion.
 
-## V1.2.0:
+## V1.2.1:
 
 - Turkish translation by @babaprogramlar.
 
