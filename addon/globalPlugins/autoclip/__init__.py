@@ -91,7 +91,11 @@ class ClipboardWatcher:
         split_at_word = config.conf["autoclip"]["splitAtWordBounds"]
 
         if len(text) > max_length:
-            ui.message(_("The clipboard contains a large amount of text. It is {} characters long").format(len(text)))
+            ui.message(
+                _("The clipboard contains a large amount of text. It is {} characters long").format(
+                    len(text)
+                )
+            )
 
         if len(text) > chunk_size:
             chunks = ClipboardWatcher.split_text(text, chunk_size, split_at_word)
@@ -101,7 +105,9 @@ class ClipboardWatcher:
             ui.message(text)
 
     def start(self):
-        @ctypes.WINFUNCTYPE(ctypes.c_long, wintypes.HWND, wintypes.UINT, wintypes.WPARAM, wintypes.LPARAM)
+        @ctypes.WINFUNCTYPE(
+            ctypes.c_long, wintypes.HWND, wintypes.UINT, wintypes.WPARAM, wintypes.LPARAM
+        )
         def wndproc(hwnd, msg, wparam, lparam):
             if msg == winclip.WM_CLIPBOARDUPDATE:
                 try:
@@ -140,9 +146,14 @@ class ClipboardWatcher:
                 return
             interrupt = False
             interrupt_delay = config.conf["autoclip"]["interruptDelay"] / 1000  # Convert to seconds
-            if config.conf["autoclip"]["interrupt"] and (time.monotonic() - self.last_time) > interrupt_delay:
+            if (
+                config.conf["autoclip"]["interrupt"]
+                and (time.monotonic() - self.last_time) > interrupt_delay
+            ):
                 interrupt = True
-            queueHandler.queueFunction(queueHandler.eventQueue, ClipboardWatcher.message_text, data, interrupt)
+            queueHandler.queueFunction(
+                queueHandler.eventQueue, ClipboardWatcher.message_text, data, interrupt
+            )
             self.last_data = data
             self.last_time = time.monotonic()
 
@@ -290,13 +301,17 @@ class AutoclipSettings(gui.settingsDialogs.SettingsPanel):
 
         self.showCB = sHelper.addItem(wx.CheckBox(self, label=_("&Show in the NVDA tools menu")))
 
-        self.splitAtWordCB = sHelper.addItem(wx.CheckBox(self, label=_("Try to split chunks at &word boundaries")))
+        self.splitAtWordCB = sHelper.addItem(
+            wx.CheckBox(self, label=_("Try to split chunks at &word boundaries"))
+        )
 
         # Advanced settings
         sHelper.addItem(wx.StaticText(self, label=_("Advanced Settings")))
 
         self.chunkSizeEdit = sHelper.addLabeledControl(
-            _("Split characters above this length to segments spoken separately (number under 100 to disable):"),
+            _(
+                "Split characters above this length to segments spoken separately (number under 100 to disable):"
+            ),
             wx.SpinCtrl,
             min=0,
             max=10000,
@@ -310,14 +325,18 @@ class AutoclipSettings(gui.settingsDialogs.SettingsPanel):
         )
 
         self.debounceDelayEdit = sHelper.addLabeledControl(
-            _("Debounce Delay to not speaking a clipboard update with the same text (milliseconds) (0 to disable):"),
+            _(
+                "Debounce Delay to not speaking a clipboard update with the same text (milliseconds) (0 to disable):"
+            ),
             wx.SpinCtrl,
             min=0,
             max=5000,
         )
 
         self.interruptDelayEdit = sHelper.addLabeledControl(
-            _("Minimum delay between speech interrupts (milliseconds) (0 to disable and to always interrupt):"),
+            _(
+                "Minimum delay between speech interrupts (milliseconds) (0 to disable and to always interrupt):"
+            ),
             wx.SpinCtrl,
             min=0,
             max=5000,
