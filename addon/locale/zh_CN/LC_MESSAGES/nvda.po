@@ -1,58 +1,83 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: NVDAAutoclip\n"
-"POT-Creation-Date: 2023-07-06 16:16+0300\n"
-"PO-Revision-Date: 2025-02-24 17:41+0800\n"
+"Project-Id-Version: 'Autoclip' '1.2.2'\n"
+"Report-Msgid-Bugs-To: 'mzanf4@gmail.com'\n"
+"POT-Creation-Date: 2025-02-25 18:06+0800\n"
+"PO-Revision-Date: 2025-02-25 18:12+0800\n"
 "Last-Translator: Alan <alanzhangmw@outlook.com>\n"
-"Language-Team: nvdacn.com\n"
+"Language-Team: \n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 3.5\n"
-"X-Poedit-Basepath: ../../../..\n"
-"X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-SearchPath-0: addon/globalPlugins/autoclip/__init__.py\n"
-"X-Poedit-SearchPath-1: buildVars.py\n"
 
-#: addon/globalPlugins/autoclip/__init__.py:82
-#: addon/globalPlugins/autoclip/__init__.py:111
-#: addon/globalPlugins/autoclip/__init__.py:165 buildVars.py:23
+#: addon\globalPlugins\autoclip\__init__.py:120
+#: addon\globalPlugins\autoclip\__init__.py:149
+#: addon\globalPlugins\autoclip\__init__.py:158
+#: addon\globalPlugins\autoclip\__init__.py:237
 msgid "Autoclip"
 msgstr "自动剪贴板"
 
-#: addon/globalPlugins/autoclip/__init__.py:90
-msgid "&Automatic clipboard reading"
-msgstr "自动读取剪贴板(&T)"
-
-#: addon/globalPlugins/autoclip/__init__.py:90
-#: addon/globalPlugins/autoclip/__init__.py:110
+#: addon\globalPlugins\autoclip\__init__.py:148
+#: addon\globalPlugins\autoclip\__init__.py:204
 msgid "Toggles Autoclip, Automatic clipboard reading."
-msgstr "切换自动剪贴板、自动剪贴板读取。"
+msgstr "切换自动读取剪贴板。"
 
-#: addon/globalPlugins/autoclip/__init__.py:139
+#: addon\globalPlugins\autoclip\__init__.py:157
+msgid ""
+"Toggles if Autoclip should interrupt speech before speaking the clipboard"
+msgstr "切换自动剪贴板是否应在朗读剪贴板之前打断语音"
+
+#: addon\globalPlugins\autoclip\__init__.py:163
+msgid "Enabled \"Interrupt before speaking the clipboard\""
+msgstr "启用“朗读剪贴板前打断”"
+
+#: addon\globalPlugins\autoclip\__init__.py:166
+msgid "Disabled \"Interrupt before speaking the clipboard\""
+msgstr "禁用“朗读剪贴板前打断”"
+
+#: addon\globalPlugins\autoclip\__init__.py:191
 msgid "Enabled Automatic Clipboard Reading."
-msgstr "启用自动读取剪贴板。"
+msgstr "已启用自动读取剪贴板。"
 
-#: addon/globalPlugins/autoclip/__init__.py:143
+#: addon\globalPlugins\autoclip\__init__.py:195
 msgid "Disabled Automatic Clipboard Reading."
 msgstr "禁用自动读取剪贴板。"
 
-#: addon/globalPlugins/autoclip/__init__.py:170
+#: addon\globalPlugins\autoclip\__init__.py:203
+msgid "&Automatic clipboard reading"
+msgstr "自动读取剪贴板(&A)"
+
+#: addon\globalPlugins\autoclip\__init__.py:242
 msgid "Always &Interrupt before speaking the clipboard"
-msgstr "在说出剪贴板之前始终打断(&M)"
+msgstr "在朗读剪贴板之前总是中断(&E)"
 
-msgid "Toggles if Autoclip should interrupt speech before speaking the clipboard"
-msgstr "在说出剪贴板之前始终打断"
-
-#: addon/globalPlugins/autoclip/__init__.py:175
+#: addon\globalPlugins\autoclip\__init__.py:249
 msgid ""
-"&Remember automatic clipboard reading after  NVDA restart. Required for use in "
-"configuration profiles"
-msgstr "NVDA重新启动后记住自动读取剪贴板。必须通过配置文件保存配置"
+"&Remember automatic clipboard reading after  NVDA restart. Required for use "
+"in configuration profiles"
+msgstr "记住NVDA重新启动后是否自动读取剪贴板。需要写入配置文件(&R)"
 
-#: buildVars.py:26
+#: addon\globalPlugins\autoclip\__init__.py:254
+msgid "&Show in the NVDA tools menu"
+msgstr "在 NVDA 工具菜单中显示(&S)"
+
+#. Add-on summary, usually the user visible name of the addon.
+#. Translators: Summary for this add-on
+#. to be shown on installation and add-on information found in Add-ons Manager.
+#: buildVars.py:23
+msgid "Autoclip, automatically speak clipboard content when it changes"
+msgstr "自动剪贴板，当剪贴板内容发生变化时自动朗读"
+
+#: buildVars.py:27
 msgid ""
-"Automatically read the contents of the clipboard when a change is detected."
-msgstr "检测到更改时自动读取剪贴板的内容。"
+"Automatically read the contents of the clipboard when a change is detected. "
+"Press NVDA + Shift + Control + K to toggle."
+msgstr "检测到更改时自动读取剪贴板的内容。按NVDA+Shift+Control+K切换。"
