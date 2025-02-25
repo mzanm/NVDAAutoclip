@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="../style.css" media="screen">
+<title>自动剪贴板, 剪贴板内容更改时会自动朗读 1.2.0</title>
+</head>
+<body>
+<h1>NVDA 自动剪贴板插件</h1>
+<p>NVDA自动剪贴板载附加组件会在更改时自动读取剪贴板的内容。如果您玩的游戏将文本输出到剪贴板，并且没有直接输出到NVDA的支持，这将很有用。不需要外部程序才能使用此附加组件</p>
+<p><a href="https://github.com/mzanm/NVDAAutoclip/blob/main/changelog.md">更改日志</a>
+<a href="https://github.com/mzanm/NVDAAutoclip/releases/latest/download/Autoclip.nvda-addon">下载稳定版</a></p>
+<h2>安装</h2>
+<p>兼容性：最小兼容NVDA版本：2019.3。</p>
+<p>安装方式与所有其他附加组件相同。</p>
+<ol>
+<li>
+<p>从这个页面下载最新版本<a href="https://github.com/mzanm/NVDAAutoclip/releases">releases page</a>，或上面的直接下载链接。</p>
+</li>
+<li>
+<p>在NVDA运行时，单击下载文件，并且应显示安装插件对话框。</p>
+</li>
+</ol>
+<h2>用法</h2>
+<p>安装插件并通过快捷方式或工具菜单中的选项启用后，它将在剪贴板更改时自动读取剪贴板的内容。请注意，默认情况下，将暂时激活附加组件，直到NVDA的下一个重新启动为止。附加组件不能保存其状态在NVDA的配置中，除非您在附加组件的设置面板中更改该行为：</p>
+<ul>
+<li>
+<p><strong>键盘快捷键</strong>：按<code> NVDA+CONTROL+SHIFT+K </code>切换自动剪贴板阅读。可以像所有其他手势一样，通常在NVDA输入手势对话框中重新分配快捷方式。它可以在“自动剪贴板”类别中找到。</p>
+</li>
+<li>
+<p><strong>工具菜单</strong>：打开NVDA工具菜单，然后选择“ <code>自动读取剪贴板</code>”以打开或关闭它。</p>
+</li>
+</ul>
+<p>默认情况下，在说剪贴板之前，附加组件不会中断。如果您希望在说剪贴板之前始终中断当前语音，则可以在NVDA设置对话框中的附加组件设置面板中更改此设置。如果您正在玩NVDA处于睡眠模式时将文本输出到剪贴板的游戏，则此选项将很有用，这会导致键盘键不中断NVDA。</p>
+<h2>配置</h2>
+<p>该插件在设置面板中具有以下配置选项：</p>
+<ul>
+<li>
+<p>允许用户配置附加组件是否应始终打断当前语音以朗读剪贴板。</p>
+</li>
+<li>
+<p>允许用户配置附加组件是否应记住其启用或禁用状态。启用此选项必须在配置文件中写入配置。</p>
+</li>
+</ul>
+</body>
+</html>
