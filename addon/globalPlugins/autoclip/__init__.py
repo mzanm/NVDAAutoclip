@@ -6,10 +6,9 @@
 # If the LICENSE file is not available, you can find the  GNU General Public License Version 2 at this link:
 # https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
-import ctypes
 import time
-from ctypes import wintypes
 
+import gui.guiHelper
 import wx
 
 import addonHandler
@@ -38,24 +37,9 @@ DEFAULT_INTERRUPT_DELAY = 50
 class ClipboardWatcher:
     def __init__(self):
         self.state = False
+        self.window = None
         self.last_time = 0  # last time a clipboard notification was sent
         self.last_data = ""  # last text of a clipboard notification
-        self.winclip = winclip.win32clip()
-        self.hwnd = self.winclip.CreateWindow(
-            0,
-            "STATIC",
-            None,
-            0,
-            0,
-            0,
-            0,
-            0,
-            winclip.HWND_MESSAGE,
-            None,
-            self.winclip.GetModuleHandle(None),
-            None,
-        )
-        log.debug("created window %d", self.hwnd)
 
     @staticmethod
     def split_text(text, chunk_size, split_at_word):
@@ -73,7 +57,7 @@ class ClipboardWatcher:
                 index = next_index
             else:
                 last_space = chunk.rfind(" ")
-                if last_space not in (-1, 0, 1):
+                if last_space > 1:
                     chunks.append(chunk[:last_space])
                     index += last_space + 1
                 else:
@@ -86,16 +70,8 @@ class ClipboardWatcher:
         if interrupt:
             speech.cancelSpeech()
 
-        max_length = config.conf["autoclip"]["maxLength"]
         chunk_size = config.conf["autoclip"]["chunkSize"]
         split_at_word = config.conf["autoclip"]["splitAtWordBounds"]
-
-        if len(text) > max_length:
-            ui.message(
-                _("The clipboard contains a large amount of text. It is {} characters long").format(
-                    len(text)
-                )
-            )
 
         if len(text) > chunk_size:
             chunks = ClipboardWatcher.split_text(text, chunk_size, split_at_word)
@@ -105,40 +81,20 @@ class ClipboardWatcher:
             ui.message(text)
 
     def start(self):
-        @ctypes.WINFUNCTYPE(
-            ctypes.c_long, wintypes.HWND, wintypes.UINT, wintypes.WPARAM, wintypes.LPARAM
-        )
-        def wndproc(hwnd, msg, wparam, lparam):
-            if msg == winclip.WM_CLIPBOARDUPDATE:
-                try:
-                    self.notify()
-                    return 0
-                except Exception:
-                    log.exception("Error in window proc notify")
-            return self.winclip.DefWindowProc(hwnd, msg, wparam, lparam)
-
-        self.proc = wndproc
-        self.oldProc = self.winclip.SetWindowLong(
-            self.hwnd, winclip.GWL_WNDPROC, ctypes.cast(self.proc, ctypes.c_void_p)
-        )
-
-        res = self.winclip.AddClipboardFormatListener(self.hwnd)
-        log.debug("add format listener %d", res)
+        self.window = winclip.ClipboardMessageWindow()
+        self.window.on_clipboard_update = self.notify
         self.state = True
 
     def stop(self):
-        self.winclip.RemoveClipboardFormatListener(self.hwnd)
-        self.winclip.SetWindowLong(self.hwnd, winclip.GWL_WNDPROC, self.oldProc)
-        self.winclip.DestroyWindow(self.hwnd)
-        self.proc = None
-        self.oldProc = None
+        self.window.destroy()
+        self.window = None
         self.state = False
         self.last_time = 0
         self.last_data = ""
 
     def notify(self):
-        with self.winclip.clipboard(self.hwnd):
-            data = self.winclip.get_clipboard_data()
+        with winclip.clipboard(self.window.hwnd):
+            data = winclip.get_clipboard_data()
         if data and not data.isspace() and len(data) < config.conf["autoclip"]["maxLength"]:
             debounce_delay = config.conf["autoclip"]["debounceDelay"] / 1000  # Convert to seconds
             if self.last_data == data and (time.monotonic() - self.last_time) < debounce_delay:
@@ -306,9 +262,11 @@ class AutoclipSettings(gui.settingsDialogs.SettingsPanel):
         )
 
         # Advanced settings
-        sHelper.addItem(wx.StaticText(self, label=_("Advanced Settings")))
+        gboxSizer = wx.StaticBoxSizer(wx.VERTICAL, self, _("Advanced Settings"))
+        gbox = gboxSizer.GetStaticBox()
+        gHelper = gui.guiHelper.BoxSizerHelper(gbox, sizer=gboxSizer)
 
-        self.chunkSizeEdit = sHelper.addLabeledControl(
+        self.chunkSizeEdit = gHelper.addLabeledControl(
             _(
                 "Split characters above this length to segments spoken separately (number under 100 to disable):"
             ),
@@ -317,14 +275,14 @@ class AutoclipSettings(gui.settingsDialogs.SettingsPanel):
             max=10000,
         )
 
-        self.maxLengthEdit = sHelper.addLabeledControl(
+        self.maxLengthEdit = gHelper.addLabeledControl(
             _("Maximum text length to speak (characters):"),
             wx.SpinCtrl,
             min=1000,
-            max=100000,
+            max=1000000,
         )
 
-        self.debounceDelayEdit = sHelper.addLabeledControl(
+        self.debounceDelayEdit = gHelper.addLabeledControl(
             _(
                 "Debounce Delay to not speaking a clipboard update with the same text (milliseconds) (0 to disable):"
             ),
@@ -333,7 +291,7 @@ class AutoclipSettings(gui.settingsDialogs.SettingsPanel):
             max=5000,
         )
 
-        self.interruptDelayEdit = sHelper.addLabeledControl(
+        self.interruptDelayEdit = gHelper.addLabeledControl(
             _(
                 "Minimum delay between speech interrupts (milliseconds) (0 to disable and to always interrupt):"
             ),
@@ -343,8 +301,9 @@ class AutoclipSettings(gui.settingsDialogs.SettingsPanel):
         )
 
         # Restore defaults button
-        self.restoreDefaultsButton = sHelper.addItem(wx.Button(self, label=_("Restore &defaults")))
+        self.restoreDefaultsButton = gHelper.addItem(wx.Button(gbox, label=_("Restore &defaults")))
         self.restoreDefaultsButton.Bind(wx.EVT_BUTTON, self.onRestoreDefaults)
+        sHelper.addItem(gHelper)
 
         self.loadValues()
 
@@ -363,7 +322,6 @@ class AutoclipSettings(gui.settingsDialogs.SettingsPanel):
         self.maxLengthEdit.SetValue(DEFAULT_MAX_LENGTH)
         self.debounceDelayEdit.SetValue(DEFAULT_DEBOUNCE_DELAY)
         self.interruptDelayEdit.SetValue(DEFAULT_INTERRUPT_DELAY)
-        self.splitAtWordCB.SetValue(True)
 
     def onSave(self):
         config.conf["autoclip"]["interrupt"] = self.interruptCB.IsChecked()
