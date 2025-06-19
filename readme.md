@@ -29,27 +29,27 @@ By default, the add-on will not interrupt current speech before speaking the cli
 
 The add-on has several configuration options available in the settings panel:
 
-- **Always Interrupt before speaking the clipboard**: Allows you to configure whether the add-on should always interrupt current speech to speak the clipboard content.
+- **Interrupt before speaking the clipboard**: Allows you to configure whether the add-on should interrupt current speech to speak the clipboard content.
 
 - **Remember automatic clipboard reading after NVDA restart**: Allows the add-on to remember whether it was enabled or disabled between NVDA restarts. This option must be enabled to be able to set up the add-on to run in a specific program using configuration profiles.
 
 - **Show in the NVDA tools menu**: Disabling this option will remove the add-on's toggle from the tools menu. This is useful if you primarily use the keyboard shortcut to enable or disable the add-on and no longer require it to be accessible through the tools menu.
 
-- **Try to split text at word boundaries**:
-
-  - Enables splitting text at the nearest space to avoid cutting words in half.
-
-  - **Default value**: Enabled.
-
 #### Advanced Settings
 
-- **Split characters above this length to segments spoken separately**:
+- **Split text above this length to segments spoken separately**:
 
   - Sets the maximum number of characters per segment when splitting long clipboard content.
 
   - **Default value**: `500` characters.
 
   - Set to a number under `100` to disable text splitting entirely.
+
+- **Try to split segments at word boundaries**:
+
+  - Enables splitting text at the nearest space to avoid cutting words in half.
+
+  - **Default value**: Enabled.
 
 - **Maximum text length to speak**:
 
