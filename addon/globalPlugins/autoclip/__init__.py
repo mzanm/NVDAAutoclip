@@ -103,7 +103,7 @@ class ClipboardWatcher:
         current_time = time.monotonic()
         if data and not data.isspace() and len(data) < self.max_length:
             if self.last_data == data and (current_time - self.last_time) < self.debounce_delay:
-                self.last_time = current_time()
+                self.last_time = current_time
                 return
             should_interrupt = False
             if self.interrupt and (current_time - self.last_time) > self.interrupt_delay:
