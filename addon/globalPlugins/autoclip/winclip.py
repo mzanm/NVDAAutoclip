@@ -1,5 +1,5 @@
 # winclip
-# utilities of win32 to access the clipboard, regester to get clippboard update notifications, Etc.
+# utilities of win32 to access the clipboard, register to get clipboard update notifications, Etc.
 # A part of the Autoclip add-on for NVDA
 # Copyright (C) 2023 Mazen Alharbi
 # This file is covered by the GNU General Public License Version 2.
@@ -144,7 +144,7 @@ DefWindowProc.restype = ctypes.c_long
 
 @contextlib.contextmanager
 def clipboard(hwnd):
-    # a program could be opening the clipboard, so we'll try for at least a quartor of a second to open it
+    # a program could be opening the clipboard, so we'll try for at least a quarter of a second to open it
     t = time.monotonic() + 0.25
     while time.monotonic() < t:
         s = OpenClipboard(hwnd)

@@ -298,7 +298,7 @@ class AutoclipSettings(gui.settingsDialogs.SettingsPanel):
 
         self.debounceDelayEdit = gHelper.addLabeledControl(
             _(
-                "Debounce Delay to not speaking a clipboard update with the same text (milliseconds) (0 to disable and never filter extra equivalent clipboard updates) (-1 to never speak an equuivalent clipboard update:"
+                "Debounce Delay to not speaking a clipboard update with the same text (milliseconds) (0 to disable and never filter extra equivalent clipboard updates) (-1 to never speak an equivalent clipboard update:"
             ),
             wx.SpinCtrl,
             min=-1,
