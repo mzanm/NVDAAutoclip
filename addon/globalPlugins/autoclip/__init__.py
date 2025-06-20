@@ -100,14 +100,21 @@ class ClipboardWatcher:
     def notify(self):
         with winclip.clipboard(self.window.hwnd):
             data = winclip.get_clipboard_data()
-        current_time = time.monotonic()
+
         if data and not data.isspace() and len(data) < self.max_length:
-            if self.last_data == data and (current_time - self.last_time) < self.debounce_delay:
+            current_time = time.monotonic()
+            elapsed = current_time - self.last_time
+
+            if self.last_data == data and (
+                (elapsed < self.debounce_delay) or self.debounce_delay < 0
+            ):
                 self.last_time = current_time
                 return
+
             should_interrupt = False
-            if self.interrupt and (current_time - self.last_time) > self.interrupt_delay:
+            if self.interrupt and elapsed > self.interrupt_delay:
                 should_interrupt = True
+
             queueHandler.queueFunction(
                 queueHandler.eventQueue, self.message_text, data, should_interrupt
             )
@@ -291,10 +298,10 @@ class AutoclipSettings(gui.settingsDialogs.SettingsPanel):
 
         self.debounceDelayEdit = gHelper.addLabeledControl(
             _(
-                "Debounce Delay to not speaking a clipboard update with the same text (milliseconds) (0 to disable):"
+                "Debounce Delay to not speaking a clipboard update with the same text (milliseconds) (0 to disable and never filter extra equivalent clipboard updates) (-1 to never speak an equuivalent clipboard update:"
             ),
             wx.SpinCtrl,
-            min=0,
+            min=-1,
             max=30000,
         )
 
