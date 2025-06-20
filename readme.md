@@ -69,6 +69,8 @@ The add-on has several configuration options available in the settings panel:
 
   - Set to `0` to disable.
 
+  - Set to -1 to never speak a clipboard update that is equivalent to the previous one, without a delay.
+
 - **Minimum delay between speech interrupts**:
 
   - Controls the minimum delay between speech interruptions when the add-on is set to interrupt current speech.
