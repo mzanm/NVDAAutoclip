@@ -8,7 +8,6 @@
 
 import time
 
-import gui.guiHelper
 import wx
 
 import addonHandler
@@ -17,6 +16,7 @@ import core
 import globalPluginHandler
 import globalVars
 import gui
+import gui.guiHelper
 import queueHandler
 import scriptHandler
 import speech
@@ -106,9 +106,7 @@ class ClipboardWatcher:
                 self.last_time = current_time()
                 return
             should_interrupt = False
-            if (self.interrupt
-                and (current_time - self.last_time) > self.interrupt_delay
-            ):
+            if self.interrupt and (current_time - self.last_time) > self.interrupt_delay:
                 should_interrupt = True
             queueHandler.queueFunction(
                 queueHandler.eventQueue, self.message_text, data, should_interrupt
@@ -134,7 +132,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         if globalVars.appArgs.secure:
             return
         conf = config.conf["autoclip"]
-        if self.watcher: # reload configuration encase settings changed
+        if self.watcher:  # reload configuration encase settings changed
             self.watcher.load_config()
 
         if conf["rememberState"]:
@@ -264,7 +262,6 @@ class AutoclipSettings(gui.settingsDialogs.SettingsPanel):
 
         self.showCB = sHelper.addItem(wx.CheckBox(self, label=_("&Show in the NVDA tools menu")))
 
-
         # Advanced settings
         gboxSizer = wx.StaticBoxSizer(wx.VERTICAL, self, _("Advanced Settings"))
         gbox = gboxSizer.GetStaticBox()
@@ -280,7 +277,9 @@ class AutoclipSettings(gui.settingsDialogs.SettingsPanel):
         )
 
         self.splitAtWordCB = gHelper.addItem(
-            wx.CheckBox(gbox, label=_("When splitting text, try to split segments at word boundaries"))
+            wx.CheckBox(
+                gbox, label=_("When splitting text, try to split segments at word boundaries")
+            )
         )
 
         self.maxLengthEdit = gHelper.addLabeledControl(
@@ -308,7 +307,9 @@ class AutoclipSettings(gui.settingsDialogs.SettingsPanel):
             max=5000,
         )
 
-        self.restoreDefaultsButton = gHelper.addItem(wx.Button(gbox, label=_("Restore advanced settings to &defaults")))
+        self.restoreDefaultsButton = gHelper.addItem(
+            wx.Button(gbox, label=_("Restore advanced settings to &defaults"))
+        )
         self.restoreDefaultsButton.Bind(wx.EVT_BUTTON, self.onRestoreDefaults)
         sHelper.addItem(gHelper)
 
@@ -342,7 +343,9 @@ class AutoclipSettings(gui.settingsDialogs.SettingsPanel):
         conf["maxLength"] = self.maxLengthEdit.GetValue()
         conf["debounceDelay"] = self.debounceDelayEdit.GetValue()
         conf["interruptDelay"] = self.interruptDelayEdit.GetValue()
-        plugin = next((p for p in globalPluginHandler.runningPlugins if type(p) is GlobalPlugin), None)
+        plugin = next(
+            (p for p in globalPluginHandler.runningPlugins if type(p) is GlobalPlugin), None
+        )
         if plugin:
             queueHandler.queueFunction(queueHandler.eventQueue, plugin.onConfigInit)
         else:

@@ -16,10 +16,10 @@ from ctypes.wintypes import (
     BOOL,
     DWORD,
     HANDLE,
-    HGLOBAL,
-    HINSTANCE,
-    HICON,
     HBRUSH,
+    HGLOBAL,
+    HICON,
+    HINSTANCE,
     HMENU,
     HMODULE,
     HWND,
@@ -182,9 +182,9 @@ class ClipboardMessageWindow:
             if msg == WM_CLIPBOARDUPDATE and self.on_clipboard_update:
                 try:
                     self.on_clipboard_update()
-                    return 0
                 except Exception:
                     log.exception("Error in window proc notify")
+                return 0
             return DefWindowProc(hwnd, msg, wparam, lparam)
 
         self._raw_wndproc = _raw_wndproc
