@@ -45,7 +45,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run: |
           gh release create "${{ github.ref_name }}" \
-          "*.nvda-addon *.pot" \
+          "*.nvda-addon" "*.pot" \
           --title "${{ github.ref_name }}" \
           --notes-file "release_description.md" \
           --verify-tag
