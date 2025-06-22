@@ -63,7 +63,7 @@ msgstr "Panoya konuşmadan önce her zaman &Araya gir"
 
 #: addon\globalPlugins\autoclip\__init__.py:238
 msgid ""
-"&Remember automatic clipboard reading after  NVDA restart. Required for use "
+"&Remember automatic clipboard reading after NVDA restart. Required for use "
 "in configuration profiles"
 msgstr ""
 "&NVDA yeniden başlatıldıktan sonra otomatik pano okumasını hatırla. "

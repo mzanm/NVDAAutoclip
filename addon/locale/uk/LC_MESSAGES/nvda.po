@@ -47,7 +47,7 @@ msgstr "Завжди &переривати, перш ніж озвучити в�
 
 #: addon/globalPlugins/autoclip/__init__.py:175
 msgid ""
-"&Remember automatic clipboard reading after  NVDA restart. Required for use "
+"&Remember automatic clipboard reading after NVDA restart. Required for use "
 "in configuration profiles"
 msgstr ""
 "&Зберігати автоматичне читання буфера обміну після перезавантаження NVDA. "

@@ -63,7 +63,7 @@ msgstr "Keskeytä aina ennen le&ikepöydän sisällön puhumista"
 
 #: addon\globalPlugins\autoclip\__init__.py:238
 msgid ""
-"&Remember automatic clipboard reading after  NVDA restart. Required for use "
+"&Remember automatic clipboard reading after NVDA restart. Required for use "
 "in configuration profiles"
 msgstr ""
 "&Muista automaattisen leikepöydän puhumisen tila NVDA:n "

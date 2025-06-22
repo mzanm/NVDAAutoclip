@@ -1,5 +1,9 @@
 # NVDAAutoclip changelog
 
+## V1.3.1
+
+- Updated translations
+
 ## V1.3.0
 
 - NVDA 2025.1 support

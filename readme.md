@@ -7,7 +7,7 @@ Automatically reads clipboard text when it changes. Useful for games that output
 
 ## Installation
 
-**Compatibility:** NVDA 2019.3 or later
+**Compatibility:** NVDA 2021.1 or later
 
 **Note:** The add-on is available in the NVDA add-on store (NVDA menu > tools > Add-on Store > Available add-ons tab) the following is a manual installation guide.
 

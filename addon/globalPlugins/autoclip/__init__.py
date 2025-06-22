@@ -255,7 +255,7 @@ class AutoclipSettings(gui.settingsDialogs.SettingsPanel):
         sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=panelSizer)
 
         self.interruptCB = sHelper.addItem(
-            wx.CheckBox(self, label=_("&Interrupt before speaking the clipboard"))
+            wx.CheckBox(self, label=_("Always &Interrupt before speaking the clipboard"))
         )
 
         self.rememberCB = sHelper.addItem(

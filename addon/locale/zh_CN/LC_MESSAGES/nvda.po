@@ -61,7 +61,7 @@ msgstr "在朗读剪贴板之前总是中断(&E)"
 
 #: addon\globalPlugins\autoclip\__init__.py:249
 msgid ""
-"&Remember automatic clipboard reading after  NVDA restart. Required for use "
+"&Remember automatic clipboard reading after NVDA restart. Required for use "
 "in configuration profiles"
 msgstr "记住NVDA重新启动后是否自动读取剪贴板。需要写入配置文件(&R)"
 
