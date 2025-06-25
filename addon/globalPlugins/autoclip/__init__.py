@@ -6,9 +6,7 @@
 # If the LICENSE file is not available, you can find the  GNU General Public License Version 2 at this link:
 # https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
-import ctypes
 import time
-from ctypes import wintypes
 
 import wx
 
@@ -18,6 +16,7 @@ import core
 import globalPluginHandler
 import globalVars
 import gui
+import gui.guiHelper
 import queueHandler
 import scriptHandler
 import speech
@@ -28,99 +27,106 @@ from . import winclip
 
 addonHandler.initTranslation()
 
+min_chunk_size = 100
+DEFAULT_CHUNK_SIZE = 500
+DEFAULT_SPLIT_AT_WORD_BOUNDS = True
+DEFAULT_MAX_LENGTH = 15000
+DEFAULT_DEBOUNCE_DELAY = 100
+DEFAULT_INTERRUPT_DELAY = 50
+
 
 class ClipboardWatcher:
     def __init__(self):
         self.state = False
+        self.window = None
         self.last_time = 0  # last time a clipboard notification was sent
         self.last_data = ""  # last text of a clipboard notification
-        self.winclip = winclip.win32clip()
-        self.hwnd = self.winclip.CreateWindow(
-            0,
-            "STATIC",
-            None,
-            0,
-            0,
-            0,
-            0,
-            0,
-            winclip.HWND_MESSAGE,
-            None,
-            self.winclip.GetModuleHandle(None),
-            None,
-        )
-        log.debug("created window %d", self.hwnd)
+        self.load_config()
+
+    def load_config(self):
+        conf = config.conf["autoclip"]
+        self.interrupt = conf["interrupt"]
+        self.chunk_size = conf["chunkSize"]
+        self.split_at_word = conf["splitAtWordBounds"]
+        self.max_length = conf["maxLength"]
+        self.debounce_delay = conf["debounceDelay"] / 1000
+        self.interrupt_delay = conf["interruptDelay"] / 1000
 
     @staticmethod
-    def message_text(text, interrupt=False):
+    def split_text(text, chunk_size, split_at_word):
+        length = len(text)
+        if not text or length <= chunk_size or not chunk_size or chunk_size < min_chunk_size:
+            return [text]
+
+        chunks = []
+        index = 0
+        while index < length:
+            next_index = min(index + chunk_size, length)
+            chunk = text[index:next_index]
+            if next_index >= length or not split_at_word or chunk.endswith(" "):
+                chunks.append(chunk)
+                index = next_index
+            else:
+                last_space = chunk.rfind(" ")
+                if last_space > 1:
+                    chunks.append(chunk[:last_space])
+                    index += last_space + 1
+                else:
+                    chunks.append(chunk)
+                    index = next_index
+        return chunks
+
+    def message_text(self, text, interrupt=False):
         if interrupt:
             speech.cancelSpeech()
-        if len(text) > 1000:
-            chunks = []
-            for i in range(0, len(text), 500):
-                chunks.append(text[i : i + 500])
+
+        if len(text) > self.chunk_size:
+            chunks = ClipboardWatcher.split_text(text, self.chunk_size, self.split_at_word)
             for chunk in chunks:
                 ui.message(chunk)
         else:
             ui.message(text)
 
     def start(self):
-        @ctypes.WINFUNCTYPE(
-            ctypes.c_long, wintypes.HWND, wintypes.UINT, wintypes.WPARAM, wintypes.LPARAM
-        )
-        def wndproc(hwnd, msg, wparam, lparam):
-            if msg == winclip.WM_CLIPBOARDUPDATE:
-                try:
-                    self.notify()
-                    return 0
-                except Exception:
-                    log.exception("Error in window proc notify")
-            return self.winclip.DefWindowProc(hwnd, msg, wparam, lparam)
-
-        self.proc = wndproc
-        self.oldProc = self.winclip.SetWindowLong(
-            self.hwnd, winclip.GWL_WNDPROC, ctypes.cast(self.proc, ctypes.c_void_p)
-        )
-
-        res = self.winclip.AddClipboardFormatListener(self.hwnd)
-        log.debug("add format listener %d", res)
+        self.window = winclip.ClipboardMessageWindow()
+        self.window.on_clipboard_update = self.notify
         self.state = True
 
     def stop(self):
-        self.winclip.RemoveClipboardFormatListener(self.hwnd)
-        self.winclip.SetWindowLong(self.hwnd, winclip.GWL_WNDPROC, self.oldProc)
-        self.winclip.DestroyWindow(self.hwnd)
-        self.proc = None
-        self.oldProc = None
+        self.window.destroy()
+        self.window = None
         self.state = False
-        self.last_time = 0
-        self.last_data = ""
 
     def notify(self):
-        with self.winclip.clipboard(self.hwnd):
-            data = self.winclip.get_clipboard_data()
-            if data and not data.isspace() and len(data) < 15000:
-                if self.last_data == data and time.monotonic() - self.last_time < 0.1:
-                    self.last_time = time.monotonic()
-                    return
-                interrupt = False
-                if (
-                    config.conf["autoclip"]["interrupt"]
-                    and time.monotonic() - self.last_time > 0.05
-                ):
-                    interrupt = True
-                queueHandler.queueFunction(
-                    queueHandler.eventQueue, ClipboardWatcher.message_text, data, interrupt
-                )
-                self.last_data = data
-                self.last_time = time.monotonic()
+        with winclip.clipboard(self.window.hwnd):
+            data = winclip.get_clipboard_data()
+
+        if data and not data.isspace() and len(data) < self.max_length:
+            current_time = time.monotonic()
+            elapsed = current_time - self.last_time
+
+            if self.last_data == data and (
+                (elapsed < self.debounce_delay) or self.debounce_delay < 0
+            ):
+                self.last_time = current_time
+                return
+
+            should_interrupt = False
+            if self.interrupt and elapsed > self.interrupt_delay:
+                should_interrupt = True
+
+            queueHandler.queueFunction(
+                queueHandler.eventQueue, self.message_text, data, should_interrupt
+            )
+            self.last_data = data
+            self.last_time = current_time
 
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
     scriptCategory = _("Autoclip")
 
     def __init__(self):
-        super(GlobalPlugin, self).__init__()
+        super().__init__()
         self.watcher = None
         self.menuItem = None
         gui.settingsDialogs.NVDASettingsDialog.categoryClasses.append(AutoclipSettings)
@@ -132,16 +138,20 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         #  as well as when a configuration profile is switched.
         if globalVars.appArgs.secure:
             return
-        if config.conf["autoclip"]["rememberState"]:
-            value = config.conf["autoclip"]["automaticClipboardReading"]
+        conf = config.conf["autoclip"]
+        if self.watcher:  # reload configuration encase settings changed
+            self.watcher.load_config()
+
+        if conf["rememberState"]:
+            value = conf["automaticClipboardReading"]
             if value and not self.watcher:
                 self.enable()
             elif not value and self.watcher:
                 self.disable()
 
-        if config.conf["autoclip"]["showInToolsMenu"] and not self.menuItem:
+        if conf["showInToolsMenu"] and not self.menuItem:
             self.addMenuItem()
-        elif not config.conf["autoclip"]["showInToolsMenu"] and self.menuItem:
+        elif not conf["showInToolsMenu"] and self.menuItem:
             self.deleteMenuItem()
 
     @scriptHandler.script(
@@ -215,7 +225,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         self.toolsMenu = None
 
     def terminate(self):
-        super(GlobalPlugin, self).terminate()
+        super().terminate()
         self.disable()
         gui.settingsDialogs.NVDASettingsDialog.categoryClasses.remove(AutoclipSettings)
         self.deleteMenuItem()
@@ -228,6 +238,11 @@ confspec = {
     "rememberState": "boolean(default=false)",
     "automaticClipboardReading": "boolean(default=false)",
     "showInToolsMenu": "boolean(default=true)",
+    "chunkSize": f"integer(default={DEFAULT_CHUNK_SIZE})",
+    "maxLength": f"integer(default={DEFAULT_MAX_LENGTH})",
+    "splitAtWordBounds": f"boolean(default={str(DEFAULT_SPLIT_AT_WORD_BOUNDS).lower()})",
+    "debounceDelay": f"integer(default={DEFAULT_DEBOUNCE_DELAY})",
+    "interruptDelay": f"integer(default={DEFAULT_INTERRUPT_DELAY})",
 }
 
 config.conf.spec["autoclip"] = confspec
@@ -238,6 +253,7 @@ class AutoclipSettings(gui.settingsDialogs.SettingsPanel):
 
     def makeSettings(self, panelSizer):
         sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=panelSizer)
+
         self.interruptCB = sHelper.addItem(
             wx.CheckBox(self, label=_("Always &Interrupt before speaking the clipboard"))
         )
@@ -246,25 +262,98 @@ class AutoclipSettings(gui.settingsDialogs.SettingsPanel):
             wx.CheckBox(
                 self,
                 label=_(
-                    "&Remember automatic clipboard reading after  NVDA restart. Required for use in configuration profiles"
+                    "&Remember automatic clipboard reading after NVDA restart. Required for use in configuration profiles"
                 ),
             )
         )
 
         self.showCB = sHelper.addItem(wx.CheckBox(self, label=_("&Show in the NVDA tools menu")))
 
-        self.interruptCB.SetValue(config.conf["autoclip"]["interrupt"])
-        self.rememberCB.SetValue(config.conf["autoclip"]["rememberState"])
-        self.showCB.SetValue(config.conf["autoclip"]["showInToolsMenu"])
+        # Advanced settings
+        gboxSizer = wx.StaticBoxSizer(wx.VERTICAL, self, _("Advanced Settings"))
+        gbox = gboxSizer.GetStaticBox()
+        gHelper = gui.guiHelper.BoxSizerHelper(gbox, sizer=gboxSizer)
+
+        self.chunkSizeEdit = gHelper.addLabeledControl(
+            _(
+                "Split text above this length to segments spoken separately (number under 100 to disable):"
+            ),
+            wx.SpinCtrl,
+            min=0,
+            max=10000,
+        )
+
+        self.splitAtWordCB = gHelper.addItem(
+            wx.CheckBox(
+                gbox, label=_("When splitting text, try to split segments at word boundaries")
+            )
+        )
+
+        self.maxLengthEdit = gHelper.addLabeledControl(
+            _("Maximum text length to speak (characters):"),
+            wx.SpinCtrl,
+            min=1000,
+            max=1000000,
+        )
+
+        self.debounceDelayEdit = gHelper.addLabeledControl(
+            _(
+                "Debounce Delay to not speaking a clipboard update with the same text (milliseconds) (0 to disable and never filter extra equivalent clipboard updates) (-1 to never speak an equivalent clipboard update:"
+            ),
+            wx.SpinCtrl,
+            min=-1,
+            max=30000,
+        )
+
+        self.interruptDelayEdit = gHelper.addLabeledControl(
+            _(
+                "Minimum delay between speech interrupts (milliseconds) (0 to disable and to always interrupt):"
+            ),
+            wx.SpinCtrl,
+            min=0,
+            max=5000,
+        )
+
+        self.restoreDefaultsButton = gHelper.addItem(
+            wx.Button(gbox, label=_("Restore advanced settings to &defaults"))
+        )
+        self.restoreDefaultsButton.Bind(wx.EVT_BUTTON, self.onRestoreDefaults)
+        sHelper.addItem(gHelper)
+
+        self.loadValues()
+
+    def loadValues(self):
+        conf = config.conf["autoclip"]
+        self.interruptCB.SetValue(conf["interrupt"])
+        self.rememberCB.SetValue(conf["rememberState"])
+        self.showCB.SetValue(conf["showInToolsMenu"])
+        self.chunkSizeEdit.SetValue(conf["chunkSize"])
+        self.splitAtWordCB.SetValue(conf["splitAtWordBounds"])
+        self.maxLengthEdit.SetValue(conf["maxLength"])
+        self.debounceDelayEdit.SetValue(conf["debounceDelay"])
+        self.interruptDelayEdit.SetValue(conf["interruptDelay"])
+
+    def onRestoreDefaults(self, evt):
+        self.chunkSizeEdit.SetValue(DEFAULT_CHUNK_SIZE)
+        self.splitAtWordCB.SetValue(DEFAULT_SPLIT_AT_WORD_BOUNDS)
+        self.maxLengthEdit.SetValue(DEFAULT_MAX_LENGTH)
+        self.debounceDelayEdit.SetValue(DEFAULT_DEBOUNCE_DELAY)
+        self.interruptDelayEdit.SetValue(DEFAULT_INTERRUPT_DELAY)
 
     def onSave(self):
-        config.conf["autoclip"]["interrupt"] = self.interruptCB.IsChecked()
-        config.conf["autoclip"]["rememberState"] = self.rememberCB.IsChecked()
-        config.conf["autoclip"]["showInToolsMenu"] = self.showCB.IsChecked()
-        try:
-            plugin = next(p for p in globalPluginHandler.runningPlugins if type(p) is GlobalPlugin)
-        except StopIteration:
-            log.exception("Unable to get plugin to apply configuration")
-            plugin = None
+        conf = config.conf["autoclip"]
+        conf["interrupt"] = self.interruptCB.IsChecked()
+        conf["rememberState"] = self.rememberCB.IsChecked()
+        conf["showInToolsMenu"] = self.showCB.IsChecked()
+        conf["chunkSize"] = self.chunkSizeEdit.GetValue()
+        conf["splitAtWordBounds"] = self.splitAtWordCB.IsChecked()
+        conf["maxLength"] = self.maxLengthEdit.GetValue()
+        conf["debounceDelay"] = self.debounceDelayEdit.GetValue()
+        conf["interruptDelay"] = self.interruptDelayEdit.GetValue()
+        plugin = next(
+            (p for p in globalPluginHandler.runningPlugins if type(p) is GlobalPlugin), None
+        )
         if plugin:
             queueHandler.queueFunction(queueHandler.eventQueue, plugin.onConfigInit)
+        else:
+            log.warning("Unable to get plugin to apply configuration")

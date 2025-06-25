@@ -1,12 +1,15 @@
 name: build-and-release-addon
-
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
 on:
   push:
-    tags: ["*"]
-  workflow_dispatch:
+    tags: ["v*"]
 
 jobs:
   build-and-release:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,34 +21,31 @@ jobs:
         run: |
           sudo apt-get update -y
           sudo apt-get install -y gettext
-          python -m pip install --upgrade pip setuptools wheel
-          python -m pip install --upgrade scons markdown
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v6
       - name: Extract Changelog
         run: |
+          import itertools
           import re
+          pattern = "^## v\d\.\d\.\d"
           with open("changelog.md", "r", encoding="UTF-8") as f:
             text = f.read()
-          matches = []
-          for match in re.finditer("^## v\d\.\d\.\d", text, re.MULTILINE | re.IGNORECASE):
-            if match:
-              matches.append(match)
-              if len(matches) == 2:
-                break
+          matches = tuple(itertools.islice(re.finditer(pattern, text, re.MULTILINE | re.IGNORECASE), 2))
           string = text[matches[0].start():matches[1].start() - 1].strip() + "\n"
           with open("release_description.md", "w", encoding="UTF-8") as f:
             f.write(string)
         shell: python
       - name: Build add-on
         run: |
-          scons
-          scons pot
+          uv run scons
+          uv run scons pot
       - name: Create release
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            ./*.nvda-addon
-            ./*.pot
-          body_path: release_description.md
-          prerelease: contains(github.ref, '-pre')
-          fail_on_unmatched_files: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release create "${{ github.ref_name }}" \
+          "*.nvda-addon" "*.pot" \
+          --title "${{ github.ref_name }}" \
+          --notes-file "release_description.md" \
+          --verify-tag

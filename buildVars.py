@@ -27,7 +27,7 @@ addon_info = {
         "Automatically read the contents of the clipboard when a change is detected. Press NVDA + Shift + Control + K to toggle."
     ),
     # version
-    "addon_version": "1.2.2",
+    "addon_version": "1.3.1",
     # Author(s)
     "addon_author": "Mazen <mzanf4@gmail.com>",
     # URL for the add-on documentation support
@@ -37,9 +37,9 @@ addon_info = {
     # Documentation file name
     "addon_docFileName": "readme.html",
     # Minimum NVDA version supported (e.g. "2018.3.0", minor version is optional)
-    "addon_minimumNVDAVersion": 2019.3,
+    "addon_minimumNVDAVersion": 2021.1,
     # Last NVDA version supported/tested (e.g. "2018.4.0", ideally more recent than minimum version)
-    "addon_lastTestedNVDAVersion": 2024.3,
+    "addon_lastTestedNVDAVersion": 2025.1,
     # Add-on update channel (default is None, denoting stable releases,
     # and for development releases, use "dev".)
     # Do not change unless you know what you are doing!
@@ -61,7 +61,7 @@ addon_info = {
 pythonSources = ["addon/globalPlugins/autoclip/*.py"]
 
 # Files that contain strings for translation. Usually your python sources
-i18nSources = pythonSources + ["buildVars.py"]
+i18nSources = [*pythonSources, "buildVars.py"]
 
 # Files that will be ignored when building the nvda-addon file
 # Paths are relative to the addon directory, not to the root directory of your addon sources.

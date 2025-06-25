@@ -62,7 +62,7 @@ msgstr "&ايقاف النطق دائمًا قبل قراءة محتوى الح�
 
 #: addon\globalPlugins\autoclip\__init__.py:238
 msgid ""
-"&Remember automatic clipboard reading after  NVDA restart. Required for use "
+"&Remember automatic clipboard reading after NVDA restart. Required for use "
 "in configuration profiles"
 msgstr ""
 "تذكر &حالة القراءة التلقائية للحافظة بعد إعادة تشغيل NVDA. يجب تمكين هذا "

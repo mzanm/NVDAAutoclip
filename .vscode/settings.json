@@ -15,7 +15,4 @@
         "../nvda/miscDeps/python"
     ],
     "python.defaultInterpreterPath": "../nvda/.venv/scripts/python.exe",
-    "yaml.schemas": {
-        "https://json.schemastore.org/github-workflow.json": "file:///c%3A/Users/Mzan1/Documents/github/NVDAAutoclip/.github/workflows/build_addon.yml"
-    }
 }

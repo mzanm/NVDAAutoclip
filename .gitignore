@@ -7,3 +7,4 @@ manifest.ini
 *.py[co]
 *.nvda-addon
 .sconsign.dblite
+*.pot

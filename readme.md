@@ -1,34 +1,41 @@
 # NVDA Autoclip Add-on
 
-The NVDA Autoclip add-on automatically reads out the contents of the clipboard whenever it changes. This can be useful if you play a game that output's text to the clipboard and has no support to output directly to NVDA. No external programs are needed to use this add-on
+Automatically reads clipboard text when it changes. Useful for games that output text to the clipboard without direct NVDA support. No external programs required.
 
 [Changelog](https://github.com/mzanm/NVDAAutoclip/blob/main/changelog.md)
 [Download latest version](https://github.com/mzanm/NVDAAutoclip/releases/latest/download/Autoclip.nvda-addon)
 
 ## Installation
 
-Compatibility: minimum compatible NVDA Version: 2019.3.
+**Compatibility:** NVDA 2021.1 or later
 
-Installation is the same to all other add-ons.
+**Note:** The add-on is available in the NVDA add-on store (NVDA menu > tools > Add-on Store > Available add-ons tab) the following is a manual installation guide.
 
-1. Download the latest release from the [releases page](https://github.com/mzanm/NVDAAutoclip/releases), or the direct download link above.
-
-2. Click on the download file while NVDA is running and the install add-on dialog should appear.
+1. Download the latest release from the [releases page](https://github.com/mzanm/NVDAAutoclip/releases) or use the direct download link above
+2. Open the downloaded file while NVDA is running to launch the install dialog
 
 ## Usage
 
-Once the add-on is installed and enable via either the shortcut or the option in the tools menu, it will automatically read out the contents of the clipboard whenever it changes. Note that by default  the add-on is activated temporarily until the next restart of NVDA. The add-on doesn't save it's state in the configuration of NVDA unless you change that behavior in the settings panel of the add-on:
+Once installed, the add-on reads the clipboard text when it changes automatically when enabled. By default, it's activated temporarily until NVDA restarts. To persist the state across restarts and to use the add-on within a configuration profile, enable this option in the add-on settings.
 
-- **Keyboard shortcut**: Press `NVDA+Control+Shift+K` to toggle automatic clipboard reading. The shortcut can be reassigned in the NVDA input gestures dialog normally like all other gestures. It can be found in the Autoclip category.
+### Enabling/Disabling
 
-- **Tools menu**: Open the NVDA tools menu and select "`Automatic clipboard reading`" to toggle it on or off.
+- **Keyboard shortcut**: `NVDA+Control+Shift+K` (customizable in NVDA Input Gestures dialog > Autoclip category)
+- **Tools menu**: NVDA menu > Tools > "Automatic clipboard reading"
 
-By default, The add-on  will not interrupt before speaking the clipboard. If you want the add-on to always interrupt current speech before speaking the clipboard, you can change this setting in the add-on's settings panel in the NVDA settings dialog. This option is useful if you're playing a game that outputs text to the clipboard while NVDA is in sleep mode, which causes keyboard keys to not interrupt NVDA.
+### Configuration
 
-## Configuration
+Access settings via NVDA Settings dialog > Autoclip category.
 
-The add-on  has the following configuration options in the settings panel:
+- **Interrupt before speaking the clipboard**: Whether to interrupt current speech first before reading out  a clipboard change
+- **Remember automatic clipboard reading after NVDA restart**: Persist enabled/disabled state across restarts (required for configuration profiles)
+- **Show in the NVDA tools menu**: Toggle visibility in the Tools menu
 
-- allows the user to configure whether the add-on should always interrupt current speech to speak the clipboard.
+#### Advanced Settings
 
-- Allows the user to configure whether the add-on should remember it's states, if it's enabled or disabled. This option must be enabled to be able to setup the add-on to run in in a specific program using configuration profiles.
+- **Split text above this length to segments spoken separately**: Maximum characters per segment to not overwhelm speech synthesizers when a large block of text is copied to the clipboard(default: 500, set below 100 to disable text splitting entirely)
+- **Try to split segments at word boundaries**: When text splitting is enabled, split at spaces to avoid cutting words (default: enabled)
+- **Maximum text length to speak**: Ignore clipboard updates exceeding this length (default: 15,000 characters)
+- **Debounce delay**: Prevent repeating identical content within this delay in milliseconds (default: 100ms, 0 to disable, -1 for no duplicates ever)
+- **Minimum delay between speech interrupts**: Minimum milliseconds between interruptions when interrupting is enabled (default: 50ms, 0 to always interrupt)
+- **Restore Defaults**: Reset all advanced settings
