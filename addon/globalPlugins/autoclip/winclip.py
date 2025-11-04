@@ -30,7 +30,37 @@ from ctypes.wintypes import (
     UINT,
     WPARAM,
 )
+from ctypes import wintypes
 
+user32 = ctypes.WinDLL("user32", use_last_error=True)
+kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+
+CF_UNICODETEXT = 13
+WM_CLIPBOARDUPDATE = 0x031D
+
+# prototypes
+user32.OpenClipboard.argtypes = [wintypes.HWND]
+user32.OpenClipboard.restype = wintypes.BOOL
+
+user32.CloseClipboard.argtypes = []
+user32.CloseClipboard.restype = wintypes.BOOL
+
+user32.IsClipboardFormatAvailable.argtypes = [wintypes.UINT]
+user32.IsClipboardFormatAvailable.restype = wintypes.BOOL
+
+user32.GetClipboardData.argtypes = [wintypes.UINT]
+user32.GetClipboardData.restype = wintypes.HANDLE  # HGLOBAL
+
+kernel32.GlobalLock.argtypes = [wintypes.HGLOBAL]
+kernel32.GlobalLock.restype = wintypes.LPVOID
+
+kernel32.GlobalUnlock.argtypes = [wintypes.HGLOBAL]
+kernel32.GlobalUnlock.restype = wintypes.BOOL
+
+kernel32.GlobalSize.argtypes = [wintypes.HGLOBAL]
+SIZE_T = getattr(wintypes, "SIZE_T", ctypes.c_size_t)
+
+kernel32.GlobalSize.restype = SIZE_T
 from logHandler import log
 
 HCURSOR = HANDLE
@@ -38,8 +68,17 @@ LRESULT = ctypes.c_longlong if sys.maxsize > 2**32 else ctypes.c_long
 CF_UNICODETEXT = 13
 WM_CLIPBOARDUPDATE = 0x031D
 GWL_WNDPROC = -4
-HWND_MESSAGE = -3
+def _HWND_MESSAGE() -> HWND:
+    """Return the special message-only window parent handle as an unsigned pointer."""
+    ptr_bits = ctypes.sizeof(ctypes.c_void_p) * 8
+    # -3 as an unsigned pointer (HWND is a pointer type; ctypes uses c_void_p)
+    unsigned = (2 ** ptr_bits) - 3
+    return ctypes.c_void_p(unsigned)  # acceptable where HWND is expected
 
+# Optional: simple helpers for styles (not strictly needed)
+WS_EX_NOACTIVATE = 0x08000000
+WS_EX_TOOLWINDOW = 0x00000080
+WS_POPUP = 0x80000000
 
 WNDPROC = ctypes.WINFUNCTYPE(LRESULT, HWND, UINT, WPARAM, LPARAM)
 
@@ -159,18 +198,27 @@ def clipboard(hwnd):
         CloseClipboard()
 
 
-def get_clipboard_data(data_format=CF_UNICODETEXT):
-    handle = GetClipboardData(data_format)
-    if not handle:
-        log.warning("Could not get clipboard data", exc_info=ctypes.WinError())
-        return ""
-    locked_handle = GlobalLock(handle)
-    try:
-        data = ctypes.c_wchar_p(locked_handle).value
-        return data if data else ""
-    finally:
-        GlobalUnlock(handle)
+def get_clipboard_data():
 
+       hglob = user32.GetClipboardData(CF_UNICODETEXT)
+
+       ptr = kernel32.GlobalLock(hglob)
+       if not ptr:
+             return None
+
+       try:
+            # Size is in BYTES for the global block (UTF-16: 2 bytes per wchar)
+            size_bytes = kernel32.GlobalSize(hglob) or 0
+            if size_bytes:
+                max_wchars = size_bytes // ctypes.sizeof(ctypes.c_wchar)
+                # Read at most that many wchar_t; strip trailing NULs
+                text = ctypes.wstring_at(ptr, max_wchars).rstrip("\x00")
+            else:
+                # Fallback: rely on NUL termination if size is unavailable
+                text = ctypes.wstring_at(ptr).rstrip("\x00")
+            return text
+       finally:
+            kernel32.GlobalUnlock(hglob)
 
 class ClipboardMessageWindow:
     def __init__(self):
@@ -206,7 +254,7 @@ class ClipboardMessageWindow:
             0,
             0,
             0,
-            HWND_MESSAGE,
+            _HWND_MESSAGE(),
             None,
             GetModuleHandle(None),
             None,
@@ -220,3 +268,4 @@ class ClipboardMessageWindow:
         UnregisterClass(self._atom, GetModuleHandle(None))
         self._wndclass = None
         self._raw_wndproc = None
+ 
