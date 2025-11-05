@@ -1,15 +1,8 @@
 {
-    "editor.accessibilitySupport": "on",
     "python.autoComplete.extraPaths": [
         "../nvda/source",
         "../nvda/miscDeps/python"
         ],
-    "files.insertFinalNewline": true,
-    "files.trimFinalNewlines": true,
-    "editor.insertSpaces": false,
-    "python.analysis.diagnosticSeverityOverrides": {
-        "reportUndefinedVariable": "none"
-    },
     "python.analysis.extraPaths": [
         "../nvda/source",
         "../nvda/miscDeps/python"
