@@ -9,6 +9,7 @@
 
 import contextlib
 import ctypes
+import functools
 import sys
 import time
 from ctypes.wintypes import (
@@ -61,19 +62,31 @@ class WNDCLASSEX(ctypes.Structure):
     )
 
 
-def error_check(func):
-    def wrapper(*args, **kwargs):
-        result = func(*args, **kwargs)
+class error_check:
+    def __init__(self, func):
+        super().__setattr__("func", func)
+        functools.update_wrapper(self, func)
+
+    def __call__(self, *args, **kwargs):
+        result = self.func(*args, **kwargs)
         if not result:
             error_code = ctypes.GetLastError()
-
             if error_code != 0:
-                error_message = f"Error in {func.__name__}"
+                error_message = f"Error in {self.func.__name__}"
                 exc = ctypes.WinError(error_code)
                 log.error(error_message, exc_info=exc)
         return result
 
-    return wrapper
+    def __setattr__(self, name, value):
+        if name in ("argtypes", "restype"):
+            setattr(self.func, name, value)
+        else:
+            super().__setattr__(name, value)
+
+    def __getattr__(self, name):
+        if name in ("argtypes", "restype"):
+            return getattr(self.func, name)
+        raise AttributeError("name")
 
 
 OpenClipboard = ctypes.windll.user32["OpenClipboard"]
@@ -109,7 +122,7 @@ GetModuleHandle.argtypes = [LPCWSTR]
 GetModuleHandle.restype = HMODULE
 
 RegisterClassEx = error_check(ctypes.windll.user32["RegisterClassExW"])
-RegisterClassEx.argtypes = [WNDCLASSEX]
+RegisterClassEx.argtypes = [ctypes.POINTER(WNDCLASSEX)]
 RegisterClassEx.restype = ATOM
 
 UnregisterClass = error_check(ctypes.windll.user32["UnregisterClassW"])
@@ -199,7 +212,7 @@ class ClipboardMessageWindow:
         self._atom = RegisterClassEx(ctypes.byref(self._wndclass))
         self.hwnd = CreateWindowEx(
             0,
-            self._atom,
+            ctypes.cast(ctypes.c_void_p(self._atom), LPCWSTR),
             None,
             0,
             0,
@@ -217,6 +230,6 @@ class ClipboardMessageWindow:
         RemoveClipboardFormatListener(self.hwnd)
         self.on_clipboard_update = None
         DestroyWindow(self.hwnd)
-        UnregisterClass(self._atom, GetModuleHandle(None))
+        UnregisterClass(ctypes.cast(ctypes.c_void_p(self._atom), LPCWSTR), GetModuleHandle(None))
         self._wndclass = None
         self._raw_wndproc = None
