@@ -27,7 +27,7 @@ addon_info = {
         "Automatically read the contents of the clipboard when a change is detected. Press NVDA + Shift + Control + K to toggle."
     ),
     # version
-    "addon_version": "1.3.2",
+    "addon_version": "1.3.3",
     # Author(s)
     "addon_author": "Mazen <mzanf4@gmail.com>",
     # URL for the add-on documentation support

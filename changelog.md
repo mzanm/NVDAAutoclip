@@ -1,5 +1,9 @@
 # NVDAAutoclip changelog
 
+## V1.3.3
+
+- Prepare for NVDA 2026.1 (64‑bit) with clipboard monitoring fixes.
+
 ## V1.3.2
 
 - Updated translations
