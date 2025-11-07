@@ -1,11 +1,10 @@
-import os
+import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
-import argparse
 from collections.abc import Sequence
-
 
 TARGET_REPO = "nvaccess/addon-datastore"
 ISSUE_TEMPLATE_NAME = "Add-on registration"
@@ -33,7 +32,7 @@ def exec_gh(
             "GH_NO_EXTENSION_UPDATE_NOTIFIER": "1",
             "GH_SPINNER_DISABLED": "1",
             "GH_PROMPT_DISABLED": "1",
-        }
+        },
     )
 
     env = (base_env | env) if env else base_env
@@ -69,13 +68,14 @@ def get_latest_release_title() -> str:
             "1",
             "--json",
             "name",
-        ]
+        ],
     )
     proc.check_returncode()
     output = proc.stdout.strip()
     releases = json.loads(output)
     if not releases:
-        raise RuntimeError("No releases found in this repository.")
+        msg = "No releases found in this repository."
+        raise RuntimeError(msg)
     return releases[0]["name"]
 
 
@@ -94,8 +94,7 @@ def get_current_repo_url() -> str:
 
 
 def get_current_repo_owner() -> str:
-    owner = get_repo_field_jq(".owner.login // .owner.name")
-    return owner
+    return get_repo_field_jq(".owner.login // .owner.name")
 
 
 def get_latest_addon_asset_url() -> str | None:
@@ -106,16 +105,15 @@ def get_latest_addon_asset_url() -> str | None:
             "--json",
             "assets",
             "--jq",
-            ".assets[] | select(.name | endswith(\".nvda-addon\")) | .url",
-        ]
+            '.assets[] | select(.name | endswith(".nvda-addon")) | .url',
+        ],
     )
     if proc.returncode != 0:
         return None
     out = proc.stdout.strip()
     if not out:
         return None
-    first_line = out.splitlines()[0]
-    return first_line
+    return out.splitlines()[0]
 
 
 def build_issue_title(repo_name: str, latest_release_title: str) -> str:
@@ -125,7 +123,7 @@ def build_issue_title(repo_name: str, latest_release_title: str) -> str:
     return f"[Submit add-on]: {display_repo} {latest_release_title}"
 
 
-def build_issue_body(
+def build_issue_body(  # noqa: PLR0913
     *,
     download_url: str,
     source_url: str,
@@ -152,12 +150,11 @@ def confirm(prompt: str) -> bool:
     return resp in {"y", "yes"}
 
 
-def main(argv: list[str]) -> int:
+def main(argv: list[str]) -> int:  # noqa: PLR0911
     parser = argparse.ArgumentParser(
         description=(
-            "Prepare and submit an NVDA add-on registration issue to the store "
-            f"({TARGET_REPO})."
-        )
+            f"Prepare and submit an NVDA add-on registration issue to the store ({TARGET_REPO})."
+        ),
     )
     parser.add_argument(
         "--channel",
@@ -195,15 +192,17 @@ def main(argv: list[str]) -> int:
 
     try:
         latest_release_title = get_latest_release_title()
-    except Exception as e:  # keep simple surface
+    except (
+        subprocess.CalledProcessError,
+        json.JSONDecodeError,
+        RuntimeError,
+    ) as e:  # keep simple surface
         print(f"Error determining latest release title: {e}")
         return 1
 
     download_url = get_latest_addon_asset_url()
     if not download_url:
-        print(
-            "Could not auto-detect a .nvda-addon asset in the latest release."
-        )
+        print("Could not auto-detect a .nvda-addon asset in the latest release.")
         try:
             manual = input("Enter the download URL manually (or leave empty to abort): ").strip()
         except EOFError:
@@ -248,7 +247,7 @@ def main(argv: list[str]) -> int:
             title,
             "-b",
             body,
-        ]
+        ],
     )
     if proc.returncode != 0:
         print("Failed to create the issue via gh.")
