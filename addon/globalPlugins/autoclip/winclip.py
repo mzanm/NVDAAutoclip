@@ -179,7 +179,7 @@ def get_clipboard_data(data_format=CF_UNICODETEXT):
         return ""
     locked_handle = GlobalLock(handle)
     try:
-        data = ctypes.c_wchar_p(locked_handle).value
+        data = ctypes.wstring_at(locked_handle)
         return data if data else ""
     finally:
         GlobalUnlock(handle)
