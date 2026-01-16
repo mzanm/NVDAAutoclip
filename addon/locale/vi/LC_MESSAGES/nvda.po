@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: NVDAAutoclip\n"
+"Project-Id-Version: Autoclip 1.3.3\n"
 "POT-Creation-Date: 2023-07-06 16:16+0300\n"
-"PO-Revision-Date: 2023-07-13 08:16+0700\n"
+"PO-Revision-Date: 2026-01-16 17:46+0700\n"
 "Last-Translator: \n"
 "Language-Team: nguyenninhhoang<nguyenninhhoang2005@gmail.com>\n"
 "Language: vi\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.8\n"
 "X-Poedit-Basepath: ../../../..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: addon/globalPlugins/autoclip/__init__.py\n"
@@ -45,23 +45,22 @@ msgstr "Luôn &Ngắt trước khi đọc bảng nhớ tạm"
 
 #: addon/globalPlugins/autoclip/__init__.py:175
 msgid ""
-"&Remember automatic clipboard reading after NVDA restart. Required for use "
-"in configuration profiles"
+"&Remember automatic clipboard reading after NVDA restart. Required for use in "
+"configuration profiles"
 msgstr ""
-"&Ghi nhớ việc đọc clipboard tự động sau khi khởi động lại NVDA. Cần thiết "
-"để sử dụng trong hồ sơ cấu hình"
+"&Ghi nhớ việc đọc clipboard tự động sau khi khởi động lại NVDA. Cần thiết để sử "
+"dụng trong hồ sơ cấu hình"
 
 #: buildVars.py:26
 msgid ""
-"Automatically read the contents of the clipboard when a change is detected. "
-"Press NVDA + Shift + Control + K to toggle."
+"Automatically read the contents of the clipboard when a change is detected. Press "
+"NVDA + Shift + Control + K to toggle."
 msgstr ""
-"Tự động đọc nội dung của clipboard khi phát hiện thay đổi."
-"Nhấn NVDA + Shift + Control + K để chuyển đổi."
+"Tự động đọc nội dung của clipboard khi phát hiện thay đổi.Nhấn NVDA + Shift + "
+"Control + K để chuyển đổi."
 
 #: addon\globalPlugins\autoclip\__init__.py:149
-msgid ""
-"Toggles if Autoclip should interrupt speech before speaking the clipboard"
+msgid "Toggles if Autoclip should interrupt speech before speaking the clipboard"
 msgstr "Chuyển đổi nếu Autoclip làm gián đoạn lời nói trước khi nói vào bảng nhớ tạm"
 
 #: addon\globalPlugins\autoclip\__init__.py:156
@@ -75,6 +74,47 @@ msgstr "Đã tắt \"Ngắt trước khi nói bảng nhớ tạm\""
 #: addon\globalPlugins\autoclip\__init__.py:242
 msgid "&Show in the NVDA tools menu"
 msgstr "&Hiển thị trong menu công cụ của NVDA"
+
+#. Advanced settings
+#: addon/globalPlugins/autoclip/__init__.py:273
+msgid "Advanced Settings"
+msgstr "Cài đặt nâng cao"
+
+#: addon/globalPlugins/autoclip/__init__.py:279
+msgid ""
+"Split text above this length to segments spoken separately (number under 100 to "
+"disable):"
+msgstr ""
+"Tách văn bản trên độ dài này thành các đoạn được đọc riêng (số dưới 100 sẽ tắt):"
+
+#: addon/globalPlugins/autoclip/__init__.py:288
+msgid "When splitting text, try to split segments at word boundaries"
+msgstr "Khi tách văn bản, hãy cố gắng tách các đoạn ở ranh giới từ"
+
+#: addon/globalPlugins/autoclip/__init__.py:293
+msgid "Maximum text length to speak (characters):"
+msgstr "Độ dài văn bản tối đa để nói (ký tự):"
+
+#: addon/globalPlugins/autoclip/__init__.py:301
+msgid ""
+"Debounce Delay to not speaking a clipboard update with the same text "
+"(milliseconds) (0 to disable and never filter extra equivalent clipboard updates) "
+"(-1 to never speak an equivalent clipboard update:"
+msgstr ""
+"Gỡ bỏ độ trễ để không đọc bản cập nhật bộ nhớ tạm có cùng văn bản (mili giây) (0 "
+"để tắt và không bao giờ lọc các bản cập nhật bộ nhớ tạm tương đương bổ sung) (-1 "
+"để không bao giờ đọc bản cập nhật bộ nhớ tạm tương đương:"
+
+#: addon/globalPlugins/autoclip/__init__.py:310
+msgid ""
+"Minimum delay between speech interrupts (milliseconds) (0 to disable and to always "
+"interrupt):"
+msgstr ""
+"Độ trễ tối thiểu giữa các lần ngắt giọng nói (mili giây) (0 để tắt và luôn ngắt):"
+
+#: addon/globalPlugins/autoclip/__init__.py:318
+msgid "Restore advanced settings to &defaults"
+msgstr "Khôi phục cài đặt nâng cao về &mặc định"
 
 #. Add-on summary, usually the user visible name of the addon.
 #. Translators: Summary for this add-on
